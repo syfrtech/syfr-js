@@ -1,0 +1,25 @@
+{
+  "name": "syfrclientsite",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "graphql": "^15.5.1",
+    "graphql-request": "^3.5.0",
+    "react": "^17.0.2",
+    "react-query": "^3.19.2",
+    "syfr-sdk": "https://github.com/syfrapp/sdk",
+    "typescript": "^4.3.5"
+  },
+  "scripts": {
+    "build": "yarn generateSdk",
+    "webpack": "webpack --config webpack.config.js",
+    "generateSdk": "graphql-codegen --require dotenv/config --config node_modules/syfr-sdk/src/codegen.yml dotenv_config_path=./.env"
+  },
+  "devDependencies": {
+    "dom-serialize": "^2.2.1",
+    "html-webpack-plugin": "^5.3.2",
+    "webpack": "^5.49.0",
+    "webpack-cli": "^4.7.2"
+  }
+}
