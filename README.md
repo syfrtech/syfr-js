@@ -2,6 +2,6 @@
 
 ## Usage
 
-create .env similar to .env.example
-run `yarn generateSdk`
-run `yarn webpack`
+1. create .env similar to .env.example
+2. run `yarn generateSdk`
+3. run `yarn webpack`
