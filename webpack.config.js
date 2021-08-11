@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   mode: "production",
+  devtool: false,
   entry: path.resolve(__dirname, "src/index.js"),
   output: {
     filename: "main.sha256-[contenthash].js",
