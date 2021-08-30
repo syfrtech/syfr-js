@@ -1,3 +1,5 @@
+import { SyfrJwk } from "../../src";
+
 export async function getKeyPair() {
   let keyPair = await crypto.subtle.generateKey(
     {
@@ -12,15 +14,16 @@ export async function getKeyPair() {
   return keyPair;
 }
 
-export async function keyToJwk(key) {
+export async function keyToJwk(key: CryptoKey) {
   const jwk = await crypto.subtle.exportKey("jwk", key);
   return JSON.stringify(jwk, null, " ");
 }
 
-export const publicJwk = {
+export const publicJwk: SyfrJwk = {
   alg: "RSA-OAEP-256",
   e: "AQAB",
   ext: true,
+  use: "enc",
   key_ops: ["wrapKey"],
   kty: "RSA",
   kid: "Ezygrr41abY4aTryEo0REdxQq5oQF641QNoSgycEoQo",
@@ -33,6 +36,7 @@ export const privateJwk = {
   dq: "rnyU_u5vNl_pV8l1Mi742XCjmfWL2wjiQsQrWuYUsLcluxaRu-OLYHtPGXd6zL9JV_s96M2yDT7sh9kkHRFqRtZDLEOWnirZb2RAsKxEK4Q3__Llf9OZaLeDqYfF3YmbV_Zkrn6_6D2iiLLZ3fNdr1wc-dTsmI3G9R93SUGwgxk",
   e: "AQAB",
   ext: true,
+  use: "enc",
   key_ops: ["unwrapKey"],
   kty: "RSA",
   kid: "Ezygrr41abY4aTryEo0REdxQq5oQF641QNoSgycEoQo",

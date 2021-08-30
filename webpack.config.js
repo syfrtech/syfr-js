@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
   mode: "production",
   devtool: false,
-  entry: path.resolve(__dirname, "src/index.js"),
+  entry: path.resolve(__dirname, "src/index.ts"),
   output: {
     filename: "main.sha256-[contenthash].js",
     path: path.resolve(__dirname, "dist"),
@@ -13,6 +13,18 @@ module.exports = {
     clean: {
       keep: /js\//,
     },
+  },
+  resolve: {
+    extensions: [".ts", ".js"],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
