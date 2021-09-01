@@ -1,6 +1,6 @@
 import { parseJwk } from "jose/jwk/parse";
 import { CompactEncrypt } from "jose/jwe/compact/encrypt";
-import { SyfrJwk } from ".";
+import { SyfrJwk } from "./types";
 
 /**
  * Parse the JWK to a CryptoKey and store both in the keychain

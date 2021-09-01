@@ -1,51 +1,15 @@
 import { fetchJwk, pushToApi } from "./request";
 import { keyFromJwk, makeCompactJwe } from "./encrypt";
-/*
- * JWK type is better than JsonWebKey type.
- * ex: JsonWebKey type doesn't recognize `kid` property.
- * @see https://github.com/microsoft/TypeScript/issues/26854
- */
-import { JWK } from "jose/webcrypto/types";
-
-/**
- * JWK / JsonWebKey extended with Syfr requirements
- *
- * `kid` must use sha256 fingerprinting (except local key): @see https://github.com/syfrapp/api/issues/77
- * `use` and `key_ops` required: @see https://github.com/syfrapp/api/issues/84
- * `jwk` spec: @see https://datatracker.ietf.org/doc/html/rfc7517
- * `kid` spec: @see https://datatracker.ietf.org/doc/html/rfc7638
- */
-export type SyfrJwk = JWK & {
-  use: "enc";
-  key_ops: Array<"wrapKey" | "unwrapKey">;
-  kid: string;
-};
-
-interface SubmitEvent extends Event {
-  target: HTMLFormElement;
-}
-
-export type FileJweMeta = {
-  name: File["name"];
-  lastModified: File["lastModified"];
-  type: File["type"];
-  cids: string[];
-};
-
-type FormData = { [k: string]: FormDataEntryValue };
-
-export type SyfrForm = {
-  id: string;
-  jwk: SyfrJwk;
-  key: CryptoKey;
-  code: String;
-  data: FormData;
-  files: string[];
-  cids: string[];
-};
+import {
+  SyfrForm,
+  Keychain,
+  SubmitEvent,
+  FileJweMeta,
+  FormDataMap,
+} from "./types";
 
 /** a map of syfr form ids and their keys */
-let keychain: { [syfrId: string]: { jwk: SyfrJwk; key: CryptoKey } } = {};
+let keychain: Keychain = {};
 
 /**
  * Check every form for the `data-syfrId` attribute
@@ -67,25 +31,28 @@ initializeSyfr();
  * Prefetches and registers the keys for the form
  */
 async function initializeSyfrForm(form: HTMLFormElement) {
-  // run on form submit instead of action
-  form.addEventListener("submit", processTheForm);
-
-  // prefetch keys
-  let syfrFormId = form.dataset.syfrId;
-  let jwk = await fetchJwk(syfrFormId);
-  let key = await keyFromJwk(jwk);
-  keychain[syfrFormId] = { jwk, key };
+  form.addEventListener("submit", processTheForm); // process on form submit
+  fetchKey(form.dataset.syfrId); //prefetch
 }
 
 async function processTheForm(event: SubmitEvent) {
   event.preventDefault();
+  await fetchKey(event.target.dataset.syfrId);
   let syfrForm = await constructSyfrForm(event);
   console.log(JSON.stringify(syfrForm));
   let payload = await constructPayload(syfrForm);
   await pushToApi(payload);
 }
 
+async function fetchKey(syfrFormId: SyfrForm["id"]) {
+  if (keychain[syfrFormId]) return;
+  let jwk = await fetchJwk(syfrFormId);
+  let key = await keyFromJwk(jwk);
+  keychain[syfrFormId] = { jwk, key };
+}
+
 /**
+ * Gather all info from form submission
  * ultimately, these may require breaking into chunks
  *  @see https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent
  */
@@ -95,25 +62,28 @@ async function constructSyfrForm(event: SubmitEvent) {
   let code = getFormCode(event);
   let files: string[] = [];
   let entries = new FormData(event.target);
-  let fileEntries = {};
+  let fileMap = {};
   let cids: string[] = [];
   for (let [index, value] of entries) {
     if (value instanceof File) {
       if (value.size === 0) {
-        fileEntries[index] = null;
+        fileMap[index] = null;
         continue;
       }
       let byteArr = await getByteArrayFromFile(value);
       let jwe = await makeCompactJwe(jwk.kid, key, value.type, byteArr);
-      fileEntries[index] = fileToFileJweMeta(value, jwe);
+      fileMap[index] = fileToFileJweMeta(value, jwe);
       files.push(jwe);
       cids.push(getUniqueIdFromJwe(jwe));
     }
   }
-  let data = { ...Object.fromEntries(entries), ...fileEntries };
+  let data: FormDataMap = { ...Object.fromEntries(entries), ...fileMap };
   return { id, key, jwk, code, files, cids, data } as SyfrForm;
 }
 
+/**
+ * Render form submission into JWEs
+ */
 async function constructPayload(syfrForm: SyfrForm) {
   const { data, code, files } = syfrForm;
   const plainText = { data, code };
@@ -160,7 +130,7 @@ function fileToFileJweMeta(formDataEntry: File, jwe: string) {
  * it is the last segment of a compact JWE
  * @see https://datatracker.ietf.org/doc/html/rfc7516/#appendix-B.7
  *
- * consider CID for fileId
+ * Possibly consider this CID implementation  in the future
  * @see https://github.com/multiformats/cid
  */
 function getUniqueIdFromJwe(jwe: string) {
