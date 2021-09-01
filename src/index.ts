@@ -29,7 +29,7 @@ export type FileJweMeta = {
   name: File["name"];
   lastModified: File["lastModified"];
   type: File["type"];
-  fileIds: string[];
+  cids: string[];
 };
 
 type FormData = { [k: string]: FormDataEntryValue };
@@ -41,7 +41,7 @@ export type SyfrForm = {
   code: String;
   data: FormData;
   files: string[];
-  fileIds: string[];
+  cids: string[];
 };
 
 /** a map of syfr form ids and their keys */
@@ -96,7 +96,7 @@ async function constructSyfrForm(event: SubmitEvent) {
   let files: string[] = [];
   let entries = new FormData(event.target);
   let fileEntries = {};
-  let fileIds: string[] = [];
+  let cids: string[] = [];
   for (let [index, value] of entries) {
     if (value instanceof File) {
       if (value.size === 0) {
@@ -107,11 +107,11 @@ async function constructSyfrForm(event: SubmitEvent) {
       let jwe = await makeCompactJwe(jwk.kid, key, value.type, byteArr);
       fileEntries[index] = fileToFileJweMeta(value, jwe);
       files.push(jwe);
-      fileIds.push(getUniqueIdFromJwe(jwe));
+      cids.push(getUniqueIdFromJwe(jwe));
     }
   }
   let data = { ...Object.fromEntries(entries), ...fileEntries };
-  return { id, key, jwk, code, files, fileIds, data } as SyfrForm;
+  return { id, key, jwk, code, files, cids, data } as SyfrForm;
 }
 
 async function constructPayload(syfrForm: SyfrForm) {
@@ -123,7 +123,7 @@ async function constructPayload(syfrForm: SyfrForm) {
     syfrForm.key,
     "text/json+syfr.1.0.0",
     byteArr,
-    syfrForm.fileIds
+    syfrForm.cids
   );
   const payload = { jwe, files };
   return payload;
@@ -140,7 +140,7 @@ function getFormCode(event: SubmitEvent) {
 }
 
 /**
- * Adds a `fileIds` property
+ * Adds a `cids` property
  * Drops file streams (no .text(), no .arrayBuffer(), .etc)
  * `fileId` is Authentication Tag from Jwe.  We can also filter by kid to locate content
  */
@@ -150,7 +150,7 @@ function fileToFileJweMeta(formDataEntry: File, jwe: string) {
     name,
     lastModified,
     type,
-    fileIds: [getUniqueIdFromJwe(jwe)], //the Authentication Tag is the fileId (should be unique)
+    cids: [getUniqueIdFromJwe(jwe)], //the Authentication Tag is the fileId (should be unique)
   };
   return fileJweMeta;
 }

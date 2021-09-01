@@ -21,16 +21,16 @@ export async function makeCompactJwe(
   key: CryptoKey,
   cty: string,
   byteArr: Uint8Array,
-  fileIds?: string[]
+  cids?: string[]
 ) {
   let protectedHeader = {
     alg: "RSA-OAEP",
     enc: "A256GCM",
     kid,
     cty,
-    fileIds,
+    cids,
   };
-  fileIds ?? delete protectedHeader.fileIds;
+  cids ?? delete protectedHeader.cids;
   let jwe = await new CompactEncrypt(byteArr)
     .setProtectedHeader(protectedHeader)
     .encrypt(key);
