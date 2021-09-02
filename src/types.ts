@@ -19,6 +19,21 @@ export type SyfrJwk = JWK & {
   kid: string;
 };
 
+/**
+ * cty:"application/json"
+ * @version 1.0.0
+ * @see https://www.iana.org/assignments/media-types/media-types.xhtml
+ *
+ * @param data is a map of form data, but disallow files (which must be converted to JWE)
+ * @see Object.fromEntries
+ *
+ * @param code is the serialized HTML representing the form
+ */
+export type SyfrJweContent = {
+  data: { [k: string]: string };
+  code: String;
+};
+
 export type FileJweMeta = {
   name: File["name"];
   lastModified: File["lastModified"];
@@ -30,8 +45,8 @@ export type SyfrForm = {
   id: string;
   jwk: SyfrJwk;
   key: CryptoKey;
-  code: String;
-  data: FormDataMap;
+  code: SyfrJweContent["code"];
+  data: SyfrJweContent["data"];
   files: string[];
   cids: string[];
 };
@@ -46,10 +61,5 @@ export type Keychain = { [syfrId: string]: { jwk: SyfrJwk; key: CryptoKey } };
  */
 export interface SubmitEvent extends Event {
   target: HTMLFormElement;
+  submitter: HTMLFormElement;
 }
-
-/**
- * Map of form data, but disallow files (which must be converted to JWE)
- * @see Object.fromEntries
- */
-export type FormDataMap = { [k: string]: string };

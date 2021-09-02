@@ -1,4 +1,4 @@
-import { SyfrJwk } from "../../src";
+import { SyfrJwk } from "../../src/types";
 
 export async function getKeyPair() {
   let keyPair = await crypto.subtle.generateKey(
