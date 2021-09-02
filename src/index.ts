@@ -5,7 +5,7 @@ import {
   Keychain,
   SubmitEvent,
   FileJweMeta,
-  FormDataMap,
+  SyfrJweContent,
 } from "./types";
 
 /** a map of syfr form ids and their keys */
@@ -37,11 +37,13 @@ async function initializeSyfrForm(form: HTMLFormElement) {
 
 async function processTheForm(event: SubmitEvent) {
   event.preventDefault();
+  disableFormSubmit(event.target, true);
   await fetchKey(event.target.dataset.syfrId);
   let syfrForm = await constructSyfrForm(event);
   console.log(JSON.stringify(syfrForm));
-  let payload = await constructPayload(syfrForm);
+  let payload = await buildJwePayload(syfrForm);
   await pushToApi(payload);
+  disableFormSubmit(event.target, false);
 }
 
 async function fetchKey(syfrFormId: SyfrForm["id"]) {
@@ -60,9 +62,9 @@ async function constructSyfrForm(event: SubmitEvent) {
   let id = event.target.dataset.syfrId;
   let { key, jwk } = keychain[id];
   let code = getFormCode(event);
-  let files: string[] = [];
   let entries = new FormData(event.target);
   let fileMap = {};
+  let files: string[] = [];
   let cids: string[] = [];
   for (let [index, value] of entries) {
     if (value instanceof File) {
@@ -77,21 +79,24 @@ async function constructSyfrForm(event: SubmitEvent) {
       cids.push(getUniqueIdFromJwe(jwe));
     }
   }
-  let data: FormDataMap = { ...Object.fromEntries(entries), ...fileMap };
+  let data: SyfrJweContent["data"] = {
+    ...Object.fromEntries(entries),
+    ...fileMap,
+  };
   return { id, key, jwk, code, files, cids, data } as SyfrForm;
 }
 
 /**
  * Render form submission into JWEs
  */
-async function constructPayload(syfrForm: SyfrForm) {
+async function buildJwePayload(syfrForm: SyfrForm) {
   const { data, code, files } = syfrForm;
   const plainText = { data, code };
   const byteArr = getByteArrayFrom(plainText);
   const jwe = await makeCompactJwe(
     syfrForm.jwk.kid,
     syfrForm.key,
-    "text/json+syfr.1.0.0",
+    "application/json",
     byteArr,
     syfrForm.cids
   );
@@ -103,7 +108,7 @@ async function constructPayload(syfrForm: SyfrForm) {
  * Serialize the form HTML to a string
  * already considered and rejected https://developer.mozilla.org/en-US/docs/Web/API/DOMParser
  */
-function getFormCode(event: SubmitEvent) {
+function getFormCode(event: SubmitEvent): SyfrJweContent["code"] {
   return new XMLSerializer()
     .serializeToString(event.target)
     .replace(/\s{2,}/g, " ");
@@ -130,7 +135,7 @@ function fileToFileJweMeta(formDataEntry: File, jwe: string) {
  * it is the last segment of a compact JWE
  * @see https://datatracker.ietf.org/doc/html/rfc7516/#appendix-B.7
  *
- * Possibly consider this CID implementation  in the future
+ * Possibly consider this CID implementation in the future
  * @see https://github.com/multiformats/cid
  */
 function getUniqueIdFromJwe(jwe: string) {
@@ -145,4 +150,9 @@ async function getByteArrayFromFile(file: File) {
 function getByteArrayFrom(obj: Object) {
   let stringifiedData = JSON.stringify(obj);
   return new TextEncoder().encode(stringifiedData);
+}
+
+function disableFormSubmit(form: HTMLFormElement, status: boolean) {
+  let submitButton = form.querySelector('[type="submit"]') as HTMLFormElement;
+  submitButton.disabled = status;
 }
