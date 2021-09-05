@@ -56,33 +56,40 @@ async function fetchKey(syfrFormId: SyfrForm["id"]) {
 /**
  * Gather all info from form submission
  * ultimately, these may require breaking into chunks
- *  @see https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent
+ * deals with duplicate names.  @see https://stackoverflow.com/a/46774073/4481226
  */
 async function constructSyfrForm(event: SubmitEvent) {
   let id = event.target.dataset.syfrId;
   let { key, jwk } = keychain[id];
   let code = getFormCode(event);
-  let entries = new FormData(event.target);
-  let fileMap = {};
+  let dataApi = new FormData(event.target);
+  let data: SyfrJweContent["data"] = {};
   let files: string[] = [];
   let cids: string[] = [];
-  for (let [index, value] of entries) {
-    if (value instanceof File) {
-      if (value.size === 0) {
-        fileMap[index] = null;
+  for (let index of dataApi.keys()) {
+    if (index in data) {
+      continue; //skip duplicate key (already handled)
+    }
+    let vals = dataApi.getAll(index);
+    let valStrings = [];
+    for (let val of vals) {
+      if (val instanceof File) {
+        if (val.size === 0) {
+          valStrings.push(null);
+          continue;
+        }
+        let byteArr = await getByteArrayFromFile(val);
+        let fileJwe = await makeCompactJwe(jwk.kid, key, val.type, byteArr);
+        let fileJweMeta = fileToFileJweMeta(val, fileJwe);
+        files.push(fileJwe);
+        cids.push(getUniqueIdFromJwe(fileJwe));
+        valStrings.push(fileJweMeta);
         continue;
       }
-      let byteArr = await getByteArrayFromFile(value);
-      let jwe = await makeCompactJwe(jwk.kid, key, value.type, byteArr);
-      fileMap[index] = fileToFileJweMeta(value, jwe);
-      files.push(jwe);
-      cids.push(getUniqueIdFromJwe(jwe));
+      valStrings.push(val);
     }
+    data[index] = vals.length > 1 ? valStrings : valStrings[0];
   }
-  let data: SyfrJweContent["data"] = {
-    ...Object.fromEntries(entries),
-    ...fileMap,
-  };
   return { id, key, jwk, code, files, cids, data } as SyfrForm;
 }
 

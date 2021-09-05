@@ -121,6 +121,7 @@
               id="avatar"
               name="avatar"
               accept="image/png, image/jpeg, image/svg+xml"
+              multiple
           /></label>
         </div>
       </fieldset>
@@ -158,6 +159,17 @@
               <option label="Wales" value="Wales"></option>
             </datalist>
           </label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Contact Preference</legend>
+        <div>
+          <input type="checkbox" name="contactBy" value="phone" checked />
+          <label for="phone">Phone</label>
+        </div>
+        <div>
+          <input type="checkbox" name="contactBy" value="email" checked />
+          <label for="email">E-Mail</label>
         </div>
       </fieldset>
       <fieldset>
