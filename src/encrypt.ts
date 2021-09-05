@@ -17,7 +17,7 @@ export async function keyFromJwk(jwk: SyfrJwk) {
  * @see https://github.com/panva/jose/blob/main/docs/classes/jwe_compact_encrypt.CompactEncrypt.md#readme
  */
 export async function makeCompactJwe(
-  kid: string,
+  kid: SyfrJwk["kid"],
   key: CryptoKey,
   cty: string,
   byteArr: Uint8Array,
