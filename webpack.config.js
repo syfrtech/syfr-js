@@ -22,10 +22,9 @@ var version = PACKAGE.version;
 module.exports = {
   mode: "production",
   devtool: false,
-  entry: path.resolve(__dirname, "src/index.ts"),
-  // entry: {
-  //   syfr: path.resolve(__dirname, "src/index.ts"),
-  // },
+  entry: {
+    syfr: path.resolve(__dirname, "src/index.ts"),
+  },
   output: {
     filename: `js/syfr-${version}.min.js`,
     path: path.resolve(__dirname, "dist"),
