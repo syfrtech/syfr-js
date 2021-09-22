@@ -1,8 +1,7 @@
 import { SyfrFormPayload } from "./types";
 
 /**
- * stub needs to be replaced with actual fetch from syfr api
- * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+ * @see https://github.com/syfrapp/api/issues/101
  */
 export async function fetchJwk(id: string) {
   try {
