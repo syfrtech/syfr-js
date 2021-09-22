@@ -1,4 +1,3 @@
-import { publicJwk as staticJwk } from "../tests/js/keygen"; //temporary for development
 import { SyfrFormPayload } from "./types";
 
 /**
@@ -6,7 +5,16 @@ import { SyfrFormPayload } from "./types";
  * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
  */
 export async function fetchJwk(id: string) {
-  return staticJwk;
+  try {
+    let response = await fetch(
+      "https://develop-api.syfr.app/rest/pub/form/" + id,
+      { method: "GET" }
+    );
+    let result = await response.json();
+    return result.publicJwk;
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 /**
