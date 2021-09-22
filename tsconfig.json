@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
         // "noImplicitAny": true,
-        "target": "ES2019",
-        "module": "ES2020",
+        "target": "ES2019", //output
+        "module": "ES2020", //input
         "moduleResolution": "node",
     }
 }

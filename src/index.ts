@@ -6,6 +6,7 @@ import {
   SubmitEvent,
   FileJweMeta,
   SyfrJweContent,
+  SyfrFormPayload,
 } from "./types";
 
 /** a map of syfr form ids and their keys */
@@ -18,28 +19,36 @@ let keychain: Keychain = {};
  * @note data-syfr-id is converted to camelCase: syfrId
  * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset#name_conversion
  */
-function initializeSyfr() {
+export function initialize() {
   let formsCollection = document.forms; // https://developer.mozilla.org/en-US/docs/Web/API/Document/forms
   Array.from(formsCollection).forEach((form) => {
-    form.dataset.syfrId && initializeSyfrForm(form);
+    let syfrFormId = form.dataset.syfrId;
+    syfrFormId && initializeSyfrForm(form, syfrFormId);
   });
 }
-initializeSyfr();
 
 /**
  * Adds event listener on form submission
  * Prefetches and registers the keys for the form
  */
-async function initializeSyfrForm(form: HTMLFormElement) {
-  form.addEventListener("submit", processTheForm); // process on form submit
+async function initializeSyfrForm(
+  form: HTMLFormElement,
+  syfrFormId: SyfrForm["id"]
+) {
+  form.addEventListener("submit", (event: SubmitEvent) => {
+    processTheForm(event, syfrFormId);
+  }); // process on form submit
   fetchKey(form.dataset.syfrId); //prefetch
 }
 
-async function processTheForm(event: SubmitEvent) {
+export async function processTheForm(
+  event: SubmitEvent,
+  syfrFormId: SyfrForm["id"]
+) {
   event.preventDefault();
   disableFormSubmit(event.target, true);
-  await fetchKey(event.target.dataset.syfrId);
-  let syfrForm = await constructSyfrForm(event);
+  await fetchKey(syfrFormId);
+  let syfrForm = await constructSyfrForm(event, syfrFormId);
   console.log(JSON.stringify(syfrForm));
   let payload = await buildJwePayload(syfrForm);
   await pushToApi(payload);
@@ -58,9 +67,11 @@ async function fetchKey(syfrFormId: SyfrForm["id"]) {
  * ultimately, these may require breaking into chunks
  * deals with duplicate names.  @see https://stackoverflow.com/a/46774073/4481226
  */
-async function constructSyfrForm(event: SubmitEvent) {
-  let id = event.target.dataset.syfrId;
-  let { key, jwk } = keychain[id];
+async function constructSyfrForm(
+  event: SubmitEvent,
+  syfrFormId: SyfrForm["id"]
+) {
+  let { key, jwk } = keychain[syfrFormId];
   let code = getFormCode(event);
   let dataApi = new FormData(event.target);
   let data: SyfrJweContent["data"] = {};
@@ -90,7 +101,7 @@ async function constructSyfrForm(event: SubmitEvent) {
     }
     data[index] = vals.length > 1 ? valStrings : valStrings[0];
   }
-  return { id, key, jwk, code, files, cids, data } as SyfrForm;
+  return { id: syfrFormId, key, jwk, code, files, cids, data } as SyfrForm;
 }
 
 /**
@@ -107,7 +118,7 @@ async function buildJwePayload(syfrForm: SyfrForm) {
     byteArr,
     syfrForm.cids
   );
-  const payload = { jwe, files };
+  const payload: SyfrFormPayload = { jwe, files };
   return payload;
 }
 

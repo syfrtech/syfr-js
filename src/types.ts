@@ -51,6 +51,11 @@ export type SyfrForm = {
   cids: string[];
 };
 
+export type SyfrFormPayload = {
+  jwe: string;
+  files: SyfrForm["files"];
+};
+
 export type Keychain = { [syfrId: string]: { jwk: SyfrJwk; key: CryptoKey } };
 
 /** Typescript currently doesn't include native types for the following */

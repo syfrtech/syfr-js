@@ -1,4 +1,3 @@
-<!-- sourced from https://raw.githubusercontent.com/reactjs/reactjs.org/master/static/html/single-file-example.html -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -7,16 +6,32 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <title>React Starter</title>
+    <title>Example Form</title>
+    <script>
+      window.addEventListener("DOMContentLoaded", (event) => {
+        //load or DOMContentLoaded https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event
+        /** Option 1: Standard (Encrypt any forms that have a data-syfr-id field) */
+        Syfr.initialize();
+
+        /** Option 2: Advanced (Encrypt forms after your own validation and modification)*/
+        // let myForm = document.getElementById("myForm");
+        // myForm.addEventListener("submit", preprocessTheForm);
+        // function preprocessTheForm(event) {
+        //   event.preventDefault;
+        //   //do your validation and modification as needed
+        //   Syfr.processTheForm(event, "123-ABC-456"); //pass the event and the Syfr Form Id
+        // }
+      });
+    </script>
   </head>
 
   <body>
     <div id="root"></div>
     <form
-      id="register"
+      id="myForm"
       enctype="multipart/form-data"
       method="post"
-      data-syfr-id="123-456"
+      data-syfr-id="841544db-7fa7-4deb-a014-9ebaa18b0ef3"
     >
       <h1>Demo Form</h1>
       <fieldset>
