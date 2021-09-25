@@ -1,12 +1,11 @@
 import { fetchJwk, pushToApi } from "./request";
 import { keyFromJwk, makeCompactJwe } from "./encrypt";
 import {
-  SyfrForm,
+  SyfrEntry,
   Keychain,
   SubmitEvent,
   FileJweMeta,
   SyfrJweContent,
-  SyfrFormPayload,
 } from "./types";
 
 /** a map of syfr form ids and their keys */
@@ -23,7 +22,7 @@ export function initialize() {
   let formsCollection = document.forms; // https://developer.mozilla.org/en-US/docs/Web/API/Document/forms
   Array.from(formsCollection).forEach((form) => {
     let syfrFormId = form.dataset.syfrId;
-    syfrFormId && initializeSyfrForm(form, syfrFormId);
+    syfrFormId && initializeSyfrEntry(form, syfrFormId);
   });
 }
 
@@ -31,35 +30,33 @@ export function initialize() {
  * Adds event listener on form submission
  * Prefetches and registers the keys for the form
  */
-async function initializeSyfrForm(
+async function initializeSyfrEntry(
   form: HTMLFormElement,
-  syfrFormId: SyfrForm["id"]
+  syfrFormId: SyfrEntry["id"]
 ) {
   form.addEventListener("submit", (event: SubmitEvent) => {
     processTheForm(event, syfrFormId);
   }); // process on form submit
-  fetchKey(form.dataset.syfrId); //prefetch
+  fetchAndStoreKey(form.dataset.syfrId); //prefetch
 }
 
 export async function processTheForm(
   event: SubmitEvent,
-  syfrFormId: SyfrForm["id"]
+  syfrFormId: SyfrEntry["id"]
 ) {
   event.preventDefault();
   disableFormSubmit(event.target, true);
-  await fetchKey(syfrFormId);
-  let syfrForm = await constructSyfrForm(event, syfrFormId);
-  console.log(JSON.stringify(syfrForm));
-  let payload = await buildJwePayload(syfrForm);
-  await pushToApi(payload);
+  await fetchAndStoreKey(syfrFormId);
+  let syfrEntry = await buildSyfrEntry(event, syfrFormId);
+  await pushToApi(syfrEntry);
   disableFormSubmit(event.target, false);
 }
 
-async function fetchKey(syfrFormId: SyfrForm["id"]) {
+async function fetchAndStoreKey(syfrFormId: SyfrEntry["id"]) {
   if (keychain[syfrFormId]) return;
   let jwk = await fetchJwk(syfrFormId);
-  let key = await keyFromJwk(jwk);
-  keychain[syfrFormId] = { jwk, key };
+  let wrappingKey = await keyFromJwk(jwk);
+  keychain[syfrFormId] = { jwk, wrappingKey };
 }
 
 /**
@@ -67,59 +64,92 @@ async function fetchKey(syfrFormId: SyfrForm["id"]) {
  * ultimately, these may require breaking into chunks
  * deals with duplicate names.  @see https://stackoverflow.com/a/46774073/4481226
  */
-async function constructSyfrForm(
-  event: SubmitEvent,
-  syfrFormId: SyfrForm["id"]
-) {
-  let { key, jwk } = keychain[syfrFormId];
-  let code = getFormCode(event);
-  let dataApi = new FormData(event.target);
-  let data: SyfrJweContent["data"] = {};
-  let files: string[] = [];
-  let cids: string[] = [];
-  for (let index of dataApi.keys()) {
-    if (index in data) {
-      continue; //skip duplicate key (already handled)
+async function buildSyfrEntry(event: SubmitEvent, syfrFormId: SyfrEntry["id"]) {
+  let { wrappingKey, jwk } = keychain[syfrFormId];
+  let rawFormData = new FormData(event.target);
+  let jwes: SyfrEntry["jwes"] = new FormData();
+  let cids: SyfrEntry["cids"] = [];
+
+  let code: SyfrJweContent["code"] = getFormCode(event);
+  let parsedData: SyfrJweContent["data"] = {};
+  for (let fieldName of rawFormData.keys()) {
+    if (fieldName in parsedData) {
+      continue; //skip duplicate key (ex: a field can have multiple files using same key)
     }
-    let vals = dataApi.getAll(index);
-    let valStrings = [];
-    for (let val of vals) {
-      if (val instanceof File) {
-        if (val.size === 0) {
-          valStrings.push(null);
-          continue;
-        }
-        let byteArr = await getByteArrayFromFile(val);
-        let fileJwe = await makeCompactJwe(jwk.kid, key, val.type, byteArr);
-        let fileJweMeta = fileToFileJweMeta(val, fileJwe);
-        files.push(fileJwe);
-        cids.push(getUniqueIdFromJwe(fileJwe));
-        valStrings.push(fileJweMeta);
-        continue;
-      }
-      valStrings.push(val);
+    let rawFieldData = rawFormData.getAll(fieldName);
+    let parsedFieldData = [];
+    for (let fieldDatum of rawFieldData) {
+      fieldDatum instanceof File
+        ? await processFile(
+            fieldDatum,
+            wrappingKey,
+            jwk.kid,
+            jwes,
+            parsedFieldData,
+            cids
+          )
+        : parsedFieldData.push(fieldDatum);
     }
-    data[index] = vals.length > 1 ? valStrings : valStrings[0];
+    // keep the array when the field has multiple entries for that key.  otherwise drop the array
+    parsedData[fieldName] =
+      rawFieldData.length > 1 ? parsedFieldData : parsedFieldData[0];
   }
-  return { id: syfrFormId, key, jwk, code, files, cids, data } as SyfrForm;
+  console.log(parsedData);
+  let rootJwe = await buildRootJwe(
+    { code, data: parsedData },
+    jwk.kid,
+    wrappingKey,
+    cids
+  );
+  // jwes.set(getUniqueIdFromJwe(rootJwe), rootJwe);
+  jwes.append("compactJWE", rootJwe);
+  return jwes;
+}
+
+async function processFile(
+  file: File,
+  wrappingKey: CryptoKey,
+  kid: SyfrEntry["jwk"]["kid"],
+  jwes: SyfrEntry["jwes"],
+  parsedFieldData: FormDataEntryValue[],
+  cids: SyfrEntry["cids"]
+) {
+  // set defaults for non-existent file
+  let fileJwe = null;
+  let fileModel = null;
+  if (file.size > 0) {
+    fileJwe = await makeCompactJwe(
+      kid,
+      wrappingKey,
+      file.type,
+      await getByteArrayFromFile(file)
+    );
+    fileModel = fileToFileModel(file, fileJwe);
+    // jwes.set(getUniqueIdFromJwe(fileJwe), fileJwe);
+    jwes.append("compactJWE", fileJwe);
+    parsedFieldData.push(fileModel);
+    cids.push(getUniqueIdFromJwe(fileJwe));
+  }
 }
 
 /**
  * Render form submission into JWEs
  */
-async function buildJwePayload(syfrForm: SyfrForm) {
-  const { data, code, files } = syfrForm;
-  const plainText = { data, code };
+async function buildRootJwe(
+  plainText,
+  kid: SyfrEntry["jwk"]["kid"],
+  wrappingKey: CryptoKey,
+  cids: string[]
+) {
   const byteArr = getByteArrayFrom(plainText);
   const jwe = await makeCompactJwe(
-    syfrForm.jwk.kid,
-    syfrForm.key,
+    kid,
+    wrappingKey,
     "application/json",
     byteArr,
-    syfrForm.cids
+    cids
   );
-  const payload: SyfrFormPayload = { jwe, files };
-  return payload;
+  return jwe;
 }
 
 /**
@@ -129,7 +159,7 @@ async function buildJwePayload(syfrForm: SyfrForm) {
 function getFormCode(event: SubmitEvent): SyfrJweContent["code"] {
   return new XMLSerializer()
     .serializeToString(event.target)
-    .replace(/\s{2,}/g, " ");
+    .replace(/\s{2,}/g, " "); //remove extra spacing
 }
 
 /**
@@ -137,13 +167,13 @@ function getFormCode(event: SubmitEvent): SyfrJweContent["code"] {
  * Drops file streams (no .text(), no .arrayBuffer(), .etc)
  * `fileId` is Authentication Tag from Jwe.  We can also filter by kid to locate content
  */
-function fileToFileJweMeta(formDataEntry: File, jwe: string) {
-  let { name, lastModified, type } = formDataEntry;
+function fileToFileModel(file: File, jwe: string) {
+  let { name, lastModified, type } = file;
   let fileJweMeta: FileJweMeta = {
     name,
     lastModified,
     type,
-    cids: [getUniqueIdFromJwe(jwe)], //the Authentication Tag is the fileId (should be unique)
+    cids: [getUniqueIdFromJwe(jwe)], //the Authentication Tag is the fileId (should be unique).  plural for future chunking.
   };
   return fileJweMeta;
 }

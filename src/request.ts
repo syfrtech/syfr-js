@@ -1,5 +1,3 @@
-import { SyfrFormPayload } from "./types";
-
 /**
  * @see https://github.com/syfrapp/api/issues/101
  */
@@ -17,13 +15,14 @@ export async function fetchJwk(id: string) {
 }
 
 /**
- * stub needs to send to syfr api
  * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
- *
- * @param {Object} payload the data going to Syfr
- * @property {string} payload.data the jwe of the form and its contents
- * @property {string[]} payload.files an array of jwes (one for each file)
+ * @see https://github.com/syfrapp/api/issues/103
  */
-export async function pushToApi(payload: SyfrFormPayload) {
-  console.log("payload", payload);
+export async function pushToApi(payload: FormData) {
+  let request = new XMLHttpRequest();
+  request.open("POST", "https://develop-api.syfr.app/rest/pub/entry");
+  request.onload = function (oEvent) {
+    console.log(request, oEvent);
+  };
+  request.send(payload);
 }

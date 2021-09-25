@@ -41,22 +41,19 @@ export type FileJweMeta = {
   cids: string[];
 };
 
-export type SyfrForm = {
+export type SyfrEntry = {
   id: string;
   jwk: SyfrJwk;
   key: CryptoKey;
   code: SyfrJweContent["code"];
   data: SyfrJweContent["data"];
-  files: string[];
+  jwes: FormData;
   cids: string[];
 };
 
-export type SyfrFormPayload = {
-  jwe: string;
-  files: SyfrForm["files"];
+export type Keychain = {
+  [syfrId: string]: { jwk: SyfrJwk; wrappingKey: CryptoKey };
 };
-
-export type Keychain = { [syfrId: string]: { jwk: SyfrJwk; key: CryptoKey } };
 
 /** Typescript currently doesn't include native types for the following */
 
