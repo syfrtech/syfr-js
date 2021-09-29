@@ -9,18 +9,25 @@
     <title>Example Form</title>
     <script>
       window.addEventListener("DOMContentLoaded", (event) => {
-        //load or DOMContentLoaded https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event
         /** Option 1: Standard (Encrypt any forms that have a data-syfr-id field) */
-        Syfr.initialize();
+        Syfr.autoInit({
+          debug: true,
+          onSuccess: () => {
+            console.log("done!");
+          },
+        });
 
-        /** Option 2: Advanced (Encrypt forms after your own validation and modification)*/
-        // let myForm = document.getElementById("myForm");
-        // myForm.addEventListener("submit", preprocessTheForm);
-        // function preprocessTheForm(event) {
-        //   event.preventDefault;
-        //   //do your validation and modification as needed
-        //   Syfr.processTheForm(event, "123-ABC-456"); //pass the event and the Syfr Form Id
-        // }
+        /** Option 2: Advanced (Encrypt forms after your own validation and modification) */
+        /**
+        let myForm = document.getElementById("myForm");
+        syfrEncrypted = Syfr.init(myForm, {autoSubmit:false});
+        myForm.addEventListener("submit", handleMyForm);
+        function handleMyForm(event) {
+          event.preventDefault();
+          //do your validation and modification as needed
+          syfrEncrypted.submit();
+        }
+        */
       });
     </script>
   </head>
@@ -248,6 +255,8 @@
       </fieldset>
     </form>
     <br /><br />
-    <form><button type="submit">Some other non-Syfr form</button></form>
+    <form name="nonSyfr">
+      <button type="submit">Some other non-Syfr form</button>
+    </form>
   </body>
 </html>
