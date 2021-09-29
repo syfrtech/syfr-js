@@ -20,13 +20,7 @@ export type SyfrJwk = JWK & {
 };
 
 /**
- * cty:"application/json"
- * @version 1.0.0
- * @see https://www.iana.org/assignments/media-types/media-types.xhtml
- *
- * @param data is a map of form data, but disallow files (which must be converted to JWE)
- * @see Object.fromEntries
- *
+ * @param data is a map of form data, but Files must be converted to FileJweMeta
  * @param code is the serialized HTML representing the form
  */
 export type SyfrJweContent = {
@@ -34,34 +28,12 @@ export type SyfrJweContent = {
   code: String;
 };
 
+/**
+ * Similar to File but drops file streams (no .text(), no .arrayBuffer(), .etc)
+ */
 export type FileJweMeta = {
   name: File["name"];
   lastModified: File["lastModified"];
   type: File["type"];
   cids: string[];
 };
-
-export type SyfrEntry = {
-  id: string;
-  jwk: SyfrJwk;
-  key: CryptoKey;
-  code: SyfrJweContent["code"];
-  data: SyfrJweContent["data"];
-  jwes: FormData;
-  cids: string[];
-};
-
-export type Keychain = {
-  [syfrId: string]: { jwk: SyfrJwk; wrappingKey: CryptoKey };
-};
-
-/** Typescript currently doesn't include native types for the following */
-
-/**
- * Event triggered on form submission
- * @see https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent
- */
-export interface SubmitEvent extends Event {
-  target: HTMLFormElement;
-  submitter: HTMLFormElement;
-}
