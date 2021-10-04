@@ -7,7 +7,7 @@ import { SyfrJwk } from "./types";
  * @see https://github.com/panva/jose/blob/main/docs/functions/jwk_parse.parseJwk.md#readme
  */
 export async function keyFromJwk(jwk: SyfrJwk) {
-  let key = (await parseJwk(jwk, "RSA-OAEP")) as CryptoKey;
+  let key = (await parseJwk(jwk, jwk.alg)) as CryptoKey;
   return key;
 }
 
@@ -17,16 +17,16 @@ export async function keyFromJwk(jwk: SyfrJwk) {
  * @see https://github.com/panva/jose/blob/main/docs/classes/jwe_compact_encrypt.CompactEncrypt.md#readme
  */
 export async function makeCompactJwe(
-  kid: SyfrJwk["kid"],
+  jwk: SyfrJwk,
   key: CryptoKey,
   cty: string,
   byteArr: Uint8Array,
   cids?: string[]
 ) {
   let protectedHeader = {
-    alg: "RSA-OAEP",
+    alg: jwk.alg,
     enc: "A256GCM",
-    kid,
+    kid: jwk.kid,
     cty,
     cids,
   };

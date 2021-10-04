@@ -138,7 +138,7 @@ export class SyfrForm {
   async processFile(file: File) {
     if (file.size > 0) {
       let fileJwe = await makeCompactJwe(
-        this.jwk.kid,
+        this.jwk,
         this.key,
         file.type,
         await this.fileToUint8(file)
@@ -183,7 +183,7 @@ export class SyfrForm {
   async objToJwe(stringifiableObj: object) {
     const byteArr = new TextEncoder().encode(JSON.stringify(stringifiableObj));
     const jwe = await makeCompactJwe(
-      this.jwk.kid,
+      this.jwk,
       this.key,
       "application/json",
       byteArr,
