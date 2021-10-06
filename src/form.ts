@@ -111,9 +111,10 @@ export class SyfrForm {
       if (fieldName in result) {
         continue; //skip duplicate key (ex: a field can have multiple files using same key)
       }
-      let parsed = await this.getParsedFieldArr(src.getAll(fieldName));
+      let fieldArr = src.getAll(fieldName);
+      let parsed = await this.getParsedFieldArr(fieldArr);
       // use src to determine if output should be an array
-      result[fieldName] = Array.isArray(src[fieldName]) ? parsed : parsed[0];
+      result[fieldName] = fieldArr.length > 1 ? parsed : parsed[0];
     }
     return result;
   }
