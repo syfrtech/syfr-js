@@ -13,6 +13,7 @@
  * @todo should restore contenthash in filename to ensure never repeat?
  */
 const path = require("path");
+const dotenv = require("dotenv").config({ path: "./.env" });
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 // const { SubresourceIntegrityPlugin } = require("webpack-subresource-integrity");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
@@ -52,6 +53,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: "demo.html",
       template: "src/template.html",
+      syfrFormId: dotenv.parsed.SYFR_FORM_ID,
       minify: false,
       // inject: "body",
     }),
