@@ -9,25 +9,25 @@
     <title>Example Form</title>
     <script>
       window.addEventListener("DOMContentLoaded", (event) => {
-        /** Option 1: Standard (Encrypt any forms that have a data-syfr-id field) */
-        Syfr.autoInit({
-          debug: true,
-          onSuccess: () => {
-            console.log("done!");
-          },
-        });
+        Array.from(document.forms).forEach((form) => {
+          form.addEventListener("debug", (event) => {
+            console.log("debug", event.detail);
+          });
 
-        /** Option 2: Advanced (Encrypt forms after your own validation and modification) */
-        /**
-        let myForm = document.getElementById("myForm");
-        syfrEncrypted = Syfr.init(myForm, {autoSubmit:false});
-        myForm.addEventListener("submit", handleMyForm);
-        function handleMyForm(event) {
-          event.preventDefault();
-          //do your validation and modification as needed
-          syfrEncrypted.submit();
-        }
-        */
+          form.addEventListener("request", (event) => {
+            for (var key in event.detail) {
+              if (key.search("on") === 0) {
+                event.detail.addEventListener(key.slice(2), (event) => {
+                  console.log("XHR Event", event);
+                });
+              }
+            }
+          });
+
+          form.addEventListener("transmit", (event) => {
+            console.log("transmitEvent", event.detail);
+          });
+        });
       });
     </script>
   </head>
@@ -47,6 +47,7 @@
           <label
             >First Name
             <input
+              required
               id="given-name"
               name="given-name"
               type="text"
@@ -144,6 +145,12 @@
               name="avatar"
               accept="image/png, image/jpeg, image/svg+xml"
               multiple
+          /></label>
+        </div>
+        <div>
+          <label for="attachments"
+            >Choose attachments:
+            <input type="file" id="attachments" name="attachments" multiple
           /></label>
         </div>
       </fieldset>
@@ -251,11 +258,18 @@
       <fieldset>
         <div>
           <button type="submit">Place Order</button>
+          <div>
+            <a
+              id="link-<%= htmlWebpackPlugin.options.syfrFormId %>"
+              href="https://syfr.app/validate/<%= htmlWebpackPlugin.options.syfrFormId %>"
+              >Protected by Syfr</a
+            >
+          </div>
         </div>
       </fieldset>
     </form>
     <br /><br />
-    <form name="nonSyfr">
+    <form name="nonSyfr" id="nonSyfrForm">
       <button type="submit">Some other non-Syfr form</button>
     </form>
   </body>

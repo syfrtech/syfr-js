@@ -1,91 +1,145 @@
 import { keyFromJwk, makeCompactJwe } from "./encrypt";
+import { SyfrEvent } from "./event";
 import { fetchJwk, pushToApi } from "./request";
-import { FileJweMeta, SyfrJwk } from "./types";
+import {
+  CompactJwe,
+  FileJweMeta,
+  JweCid,
+  JweMap,
+  SyfrJwk,
+  Uuid,
+} from "./types";
 
+/**
+ * Automatically initialized when script is included.
+ * Use event listeners to enhance user experience
+ * @see SyfrEvent
+ */
 export class SyfrForm {
-  id: string; // the UUID of the form in Syfr
+  id: Uuid; // the UUID of the form in Syfr
   form: HTMLFormElement; // the DOM representation of the form
-  key: CryptoKey; // the CryptoKey from the JWK to encrypt the formdata
-  jwk: SyfrJwk; // the JWK from Syfr to encrypt the formdata
-  jwes: object = {}; // the JWEs which will be submitted to Syfr
-  options: {
-    autoSubmit: boolean;
-    debug: boolean;
-    onSuccess: () => void;
-  };
+  pubKey: CryptoKey; // the CryptoKey from the JWK to encrypt the formdata
+  pubJwk: SyfrJwk; // the JWK from Syfr to encrypt the formdata
+  jwes: JweMap = {}; // the JWEs which will be submitted to Syfr
 
-  constructor(
-    form: SyfrForm["form"],
-    options: Partial<SyfrForm["options"]> = {}
-  ) {
+  constructor(form: SyfrForm["form"]) {
     this.form = form;
-    this.id = form.dataset.syfrId;
-    this.options = {
-      ...{ autoSubmit: true, debug: false, onSuccess: () => {} },
-      ...options,
-    };
-    if (!this.id) {
-      this.debug(
-        `Ignored "${form.name}#${form.id}". data-syfr-id attribute is required.`
-      );
-      return;
-    }
-    this.getKey();
-    // this.form
-    //   .querySelector('[type="submit"]')
-    //   .setAttribute("title", "◉ Syfr Certified E2EE");
+    this.idCheck() && this.linkCheck() && this.autoSubmit();
+  }
 
-    this.options.autoSubmit && this.autoSubmit();
-    this.debug(`Initialized SyfrId ${this.id}`);
+  idCheck() {
+    this.id = this.form.dataset.syfrId;
+    if (this.id === undefined) {
+      SyfrEvent.debug(this.form, {
+        form: this.form,
+        message: "Ignored a form which didn't have a data-syfr-id attribute.",
+      });
+      return false;
+    }
+    return true;
+  }
+
+  linkCheck() {
+    let linkId = `link-${this.id}`;
+    let href = `https://syfr.app/validate/${this.id}`;
+    let linkEl = document.getElementById(linkId);
+    let issues = {
+      ...(!linkEl && {
+        linkId: { got: linkEl, want: `<a id='${linkId}' ...` },
+      }),
+      ...(!(linkEl instanceof HTMLAnchorElement) && {
+        linkHref: { got: linkEl, want: `<a href='${href}' ...` },
+      }),
+    };
+    let isAnchor = linkEl instanceof HTMLAnchorElement;
+    if (Object.keys(issues).length < 1 && linkEl instanceof HTMLAnchorElement) {
+      let area = linkEl.offsetWidth * linkEl.offsetHeight;
+      issues = {
+        ...issues,
+        ...(linkEl.offsetParent === null && {
+          isHidden: { got: true, want: false },
+        }),
+        ...(linkEl.href != href && {
+          href: { have: linkEl.href, need: href },
+        }),
+        ...(linkEl.relList.contains("nofollow") && {
+          isNoFollow: { got: true, want: false },
+        }),
+        ...(linkEl.relList.contains("noreferrer") && {
+          isNoReferrer: { got: true, want: false },
+        }),
+        ...(area < 1500 && {
+          area: { got: area, want: 1500 },
+        }),
+      };
+    }
+
+    if (Object.keys(issues).length > 0) {
+      throw {
+        syfrId: this.id,
+        form: this.form,
+        issues,
+        error: `Form needs a correct validation link`,
+        see: "https://syfr.app/docs/validation",
+      };
+    }
+    return true;
   }
 
   async getKey() {
-    if (this.key) {
-      return this.key;
+    if (this.pubKey) {
+      return this.pubKey;
     }
-    this.jwk = await fetchJwk(this.id);
-    this.key = await keyFromJwk(this.jwk);
-    this.key &&
-      this.form.insertAdjacentHTML(
-        "afterend",
-        `<small><a href="https://syfr.app/certification/${
-          this.id
-        }" title="Certified E2EE by ◉ Syfr ${new Date()}&#10;ID:${
-          this.id
-        }&#10;&#10;${this.jwk.alg}&#10;kid:${
-          this.jwk.kid
-        }" class="syfr" target="_blank">◉ Syfr Certified Encrypted Web Form</a></small>`
-      );
-    this.debug(this.jwk);
-    return this.key;
+    try {
+      this.pubJwk = await fetchJwk(this.id);
+      this.pubKey = await keyFromJwk(this.pubJwk);
+    } catch (e) {
+      throw {
+        syfrId: this.id,
+        error: "Bad data-syfr-id or couldn't get pubKey",
+      };
+    }
+    SyfrEvent.protect(this.form, {
+      id: this.id,
+      validateUrl: `https://syfr.app/validate/${this.id}`,
+    });
+    SyfrEvent.debug(this.form, {
+      id: this.id,
+      formPubKey: this.pubKey,
+      message:
+        "use addEventListener('protected',(event)=>{...} to notify your users of the protection",
+    });
+    return this.pubKey;
   }
 
+  /**
+   * Listens for the form submit (the SubmitEvent only fires if it succeeds validation)
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event
+   */
   autoSubmit() {
-    this.form.addEventListener("submit", async (event) => {
+    SyfrEvent.debug(this.form, {
+      message: "Initializing SyfrForm",
+      syfrId: this.id,
+      form: this.form,
+    });
+    this.getKey();
+    this.form.addEventListener("submit", async (event: SubmitEvent) => {
       event.preventDefault();
+      event.stopImmediatePropagation();
+      event.stopPropagation();
       let submitBtn = this.form.querySelector('[type="submit"]');
       submitBtn.toggleAttribute("disabled");
-      submitBtn.innerHTML = "Encrypting...";
       await this.submit();
-
-      //reset the form after submissions
-      // submitBtn.toggleAttribute("disabled");
-      submitBtn.innerHTML = "Encrypted and submitted ↺";
-      submitBtn.addEventListener("onmousedown", (event) => {
-        this.form.reset();
-        // submitBtn.removeEventListener("onmousedown")
-      });
-      // this.form.reset();
+      submitBtn.toggleAttribute("disabled");
+      this.form.reset();
       this.jwes = {};
-      // this.form.style.display = "none";
     });
   }
 
   async submit() {
-    this.key || (await this.getKey());
+    this.pubKey || (await this.getKey());
     await this.buildEntry();
     await this.sendToSyfr();
-    this.options.onSuccess();
   }
 
   async buildEntry() {
@@ -105,22 +159,29 @@ export class SyfrForm {
   }
 
   async getData() {
-    let src = new FormData(this.form);
+    let srcFormData = new FormData(this.form);
     let result = {};
-    for (let fieldName of src.keys()) {
+    for (let fieldName of srcFormData.keys()) {
       if (fieldName in result) {
         continue; //skip duplicate key (ex: a field can have multiple files using same key)
       }
-      let fieldArr = src.getAll(fieldName);
+      let fieldArr = srcFormData.getAll(fieldName);
       let parsed = await this.getParsedFieldArr(fieldArr);
-      // use src to determine if output should be an array
+      // use srcFormData to determine if output should be an array
       result[fieldName] = fieldArr.length > 1 ? parsed : parsed[0];
     }
     return result;
   }
 
-  async buildRootJwe(obj: object) {
-    let rootJwe = await this.objToJwe(obj);
+  async buildRootJwe(stringifiableObj: object) {
+    const byteArr = new TextEncoder().encode(JSON.stringify(stringifiableObj));
+    const rootJwe = await makeCompactJwe(
+      this.pubJwk,
+      this.pubKey,
+      "application/json",
+      byteArr,
+      Object.keys(this.jwes)
+    );
     this.jwes[this.jweToCid(rootJwe)] = rootJwe;
   }
 
@@ -139,8 +200,8 @@ export class SyfrForm {
   async processFile(file: File) {
     if (file.size > 0) {
       let fileJwe = await makeCompactJwe(
-        this.jwk,
-        this.key,
+        this.pubJwk,
+        this.pubKey,
         file.type,
         await this.fileToUint8(file)
       );
@@ -157,7 +218,7 @@ export class SyfrForm {
   /**
    * Drops file streams (no .text(), no .arrayBuffer(), .etc)
    */
-  fileToMeta(file: File, jwe: string) {
+  fileToMeta(file: File, jwe: CompactJwe) {
     let { name, lastModified, type } = file;
     let fileJweMeta: FileJweMeta = {
       name,
@@ -168,30 +229,8 @@ export class SyfrForm {
     return fileJweMeta;
   }
 
-  /**
-   * `cid` is Authentication Tag from Jwe.  We can also filter by kid to locate content
-   * The Authentication Tag is a secure hash which should be unique (128-bits)
-   * it is the last segment of a compact JWE
-   * @see https://datatracker.ietf.org/doc/html/rfc7516/appendix-B.7
-   *
-   * Possibly consider this CID implementation in the future
-   * @see https://github.com/multiformats/cid
-   */
-  jweToCid(jwe: string) {
+  jweToCid(jwe: CompactJwe): JweCid {
     return jwe.split(".")[4];
-  }
-
-  async objToJwe(stringifiableObj: object) {
-    const byteArr = new TextEncoder().encode(JSON.stringify(stringifiableObj));
-    const jwe = await makeCompactJwe(
-      this.jwk,
-      this.key,
-      "application/json",
-      byteArr,
-      Object.keys(this.jwes)
-    );
-    this.debug(stringifiableObj);
-    return jwe;
   }
 
   async sendToSyfr() {
@@ -199,11 +238,12 @@ export class SyfrForm {
     Object.values(this.jwes).forEach((jwe) => {
       payload.append("compactJwe", jwe);
     });
-    await pushToApi(payload);
-    this.debug(this.jwes);
-  }
-
-  debug(message: any) {
-    this.options.debug && console.log(message);
+    SyfrEvent.transmit(this.form, { jwes: this.jwes, payload });
+    SyfrEvent.debug(this.form, {
+      message: "Sending to Syfr:",
+      jwes: this.jwes,
+      payload,
+    });
+    await pushToApi(payload, this.form);
   }
 }
