@@ -3,7 +3,7 @@
  * ex: JsonWebKey type doesn't recognize `kid` property.
  * @see https://github.com/microsoft/TypeScript/issues/26854
  */
-import { JWK } from "jose/webcrypto/types";
+import { JWK } from "jose";
 
 /**
  * JWK / JsonWebKey extended with Syfr requirements

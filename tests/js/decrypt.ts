@@ -1,4 +1,4 @@
-import { compactDecrypt } from "jose/jwe/compact/decrypt";
+import { compactDecrypt } from "jose";
 import { FileJweMeta } from "../../src/types";
 
 export async function restoreJweFile(

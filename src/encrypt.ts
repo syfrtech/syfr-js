@@ -1,13 +1,12 @@
-import { parseJwk } from "jose/jwk/parse";
-import { CompactEncrypt } from "jose/jwe/compact/encrypt";
+import { importJWK, CompactEncrypt } from "jose";
 import { SyfrJwk } from "./types";
 
 /**
  * Parse the JWK to a CryptoKey and store both in the keychain
- * @see https://github.com/panva/jose/blob/main/docs/functions/jwk_parse.parseJwk.md#readme
+ * @see https://github.com/panva/jose/blob/main/docs/functions/key_import.importJWK.md#readme
  */
 export async function keyFromJwk(jwk: SyfrJwk) {
-  let key = (await parseJwk(jwk, jwk.alg)) as CryptoKey;
+  let key = (await importJWK(jwk, jwk.alg)) as CryptoKey;
   return key;
 }
 
