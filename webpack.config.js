@@ -49,16 +49,16 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      filename: "demo.html",
-      template: "src/template.html",
-      syfrFormId: dotenv.parsed.SYFR_FORM_ID,
-      minify: false,
-      // inject: "body",
-    }),
-    // using subresourceintegrity causes js to fail to load in browser
-    // new SubresourceIntegrityPlugin(),
-    new WebpackAssetsManifest({ integrity: true }),
-  ],
+  // plugins: [
+  //   new HtmlWebpackPlugin({
+  //     filename: "demo.html",
+  //     template: "src/template.html",
+  //     syfrFormId: dotenv.parsed.SYFR_FORM_ID,
+  //     minify: false,
+  //     // inject: "body",
+  //   }),
+  //   // using subresourceintegrity causes js to fail to load in browser
+  //   // new SubresourceIntegrityPlugin(),
+  //   new WebpackAssetsManifest({ integrity: true }),
+  // ],
 };
