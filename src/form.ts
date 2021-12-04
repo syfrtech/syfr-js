@@ -21,6 +21,7 @@ export class SyfrForm {
   pubKey: CryptoKey; // the CryptoKey from the JWK to encrypt the formdata
   pubJwk: SyfrJwk; // the JWK from Syfr to encrypt the formdata
   jwes: JweMap = {}; // the JWEs which will be submitted to Syfr
+  loading: boolean = false;
 
   constructor(form: SyfrForm["form"]) {
     this.form = form;
@@ -51,7 +52,6 @@ export class SyfrForm {
         linkHref: { got: linkEl, want: `<a href='${href}' ...` },
       }),
     };
-    let isAnchor = linkEl instanceof HTMLAnchorElement;
     if (Object.keys(issues).length < 1 && linkEl instanceof HTMLAnchorElement) {
       let area = linkEl.offsetWidth * linkEl.offsetHeight;
       issues = {
@@ -73,7 +73,6 @@ export class SyfrForm {
         }),
       };
     }
-
     if (Object.keys(issues).length > 0) {
       throw {
         syfrId: this.id,
@@ -127,12 +126,15 @@ export class SyfrForm {
       event.preventDefault();
       event.stopImmediatePropagation();
       event.stopPropagation();
-      let submitBtn = this.form.querySelector('[type="submit"]');
-      submitBtn.toggleAttribute("disabled");
+      if (this.loading) {
+        SyfrEvent.debug(this.form, "Ignored duplicate submission.");
+        return;
+      }
+      this.loading = true;
       await this.submit();
-      submitBtn.toggleAttribute("disabled");
       this.form.reset();
       this.jwes = {};
+      this.loading = false;
     });
   }
 
