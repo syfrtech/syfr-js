@@ -74,6 +74,22 @@ export type JweMap = { [cid: JweCid]: CompactJwe };
 type SyfrDebugEventDetail = any;
 
 /**
+ * Emitted to help developers debug (no certain timing)
+ */
+export type SyfrDebugEvent = CustomEvent<SyfrDebugEventDetail>;
+
+/**
+ * Protect`CustomEvent.detail` confirms that the form submissions will be protected by Syfr.
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+ */
+type SyfrProtectEventDetail = { id: string; validateUrl: string };
+
+/**
+ * Emitted when Syfr has loaded the form's public `CryptoKey`
+ */
+export type SyfrProtectEvent = CustomEvent<SyfrProtectEventDetail>;
+
+/**
  * Transmit `CustomEvent.detail` provides an UNSTABLE a way to create your own webhooks.
  * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
  */
@@ -83,33 +99,17 @@ type SyfrTransmitEventDetail = {
 };
 
 /**
+ * Emitted immediately before `XMLHttpRequest.send()`
+ */
+export type SyfrTransmitEvent = CustomEvent<SyfrTransmitEventDetail>;
+
+/**
  * Request `CustomEvent.detail` provides the XMLHttpRequest for the form.
  * Monitor upload, show errors, handle success, and more
  * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#events
  * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
  */
 type SyfrRequestEventDetail = XMLHttpRequest;
-
-/**
- * Protect`CustomEvent.detail` confirms that the form submissions will be protected by Syfr.
- * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
- */
-type SyfrProtectEventDetail = { id: string; validateUrl: string };
-
-/**
- * Emitted to help developers debug (no certain timing)
- */
-export type SyfrDebugEvent = CustomEvent<SyfrDebugEventDetail>;
-
-/**
- * Emitted when Syfr has loaded the form's public `CryptoKey`
- */
-export type SyfrProtectEvent = CustomEvent<SyfrProtectEventDetail>;
-
-/**
- * Emitted immediately before `XMLHttpRequest.send()`
- */
-export type SyfrTransmitEvent = CustomEvent<SyfrTransmitEventDetail>;
 
 /**
  * Emitted when an XMLHttpRequest is created
