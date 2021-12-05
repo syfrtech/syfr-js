@@ -1,6 +1,6 @@
 import {
   SyfrDebugEvent,
-  SyfrProtectionEvent,
+  SyfrProtectEvent,
   SyfrRequestEvent,
   SyfrTransmitEvent,
 } from "./types";
@@ -73,14 +73,11 @@ export class SyfrEvent {
   }
 
   /**
-   * @see SyfrProtectionEvent
+   * @see SyfrProtectEvent
    */
-  static protect(
-    form: HTMLFormElement,
-    detail?: SyfrProtectionEvent["detail"]
-  ) {
+  static protect(form: HTMLFormElement, detail?: SyfrProtectEvent["detail"]) {
     form.dispatchEvent(
-      new CustomEvent("protect", { detail }) as SyfrProtectionEvent
+      new CustomEvent("protect", { detail }) as SyfrProtectEvent
     );
   }
 
