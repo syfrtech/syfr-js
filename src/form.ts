@@ -77,6 +77,7 @@ export class SyfrForm {
       };
     }
     if (Object.keys(issues).length > 0) {
+      SyfrEvent.invalid(this.form);
       throw {
         form: this.form,
         issues,
@@ -95,12 +96,13 @@ export class SyfrForm {
       this.pubJwk = await fetchJwk(this.id);
       this.pubKey = await keyFromJwk(this.pubJwk);
     } catch (e) {
+      SyfrEvent.invalid(this.form);
       throw {
         syfrId: this.id,
         error: "Bad data-syfr-id or couldn't get pubKey",
       };
     }
-    SyfrEvent.protect(this.form, {
+    SyfrEvent.valid(this.form, {
       id: this.id,
       validateUrl: `https://syfr.app/validate/${this.id}`,
     });

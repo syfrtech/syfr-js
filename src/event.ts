@@ -1,8 +1,9 @@
 import {
   SyfrDebugEvent,
-  SyfrProtectEvent,
+  SyfrValidEvent,
   SyfrRequestEvent,
   SyfrTransmitEvent,
+  SyfrInvalidEvent,
 } from "./types";
 
 /**
@@ -65,34 +66,26 @@ import {
  * @see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Constraint_validation
  */
 export class SyfrEvent {
-  /**
-   * @see SyfrDebugEvent
-   */
   static debug(form: HTMLFormElement, detail: SyfrDebugEvent["detail"]) {
     form.dispatchEvent(new CustomEvent("debug", { detail }) as SyfrDebugEvent);
   }
 
-  /**
-   * @see SyfrProtectEvent
-   */
-  static protect(form: HTMLFormElement, detail?: SyfrProtectEvent["detail"]) {
+  static valid(form: HTMLFormElement, detail?: SyfrValidEvent["detail"]) {
+    form.dispatchEvent(new CustomEvent("valid", { detail }) as SyfrValidEvent);
+  }
+
+  static invalid(form: HTMLFormElement, detail?: SyfrInvalidEvent["detail"]) {
     form.dispatchEvent(
-      new CustomEvent("protect", { detail }) as SyfrProtectEvent
+      new CustomEvent("invalid", { detail }) as SyfrInvalidEvent
     );
   }
 
-  /**
-   * @see SyfrTransmitEvent
-   */
   static transmit(form: HTMLFormElement, detail: SyfrTransmitEvent["detail"]) {
     form.dispatchEvent(
       new CustomEvent("transmit", { detail }) as SyfrTransmitEvent
     );
   }
 
-  /**
-   * @see SyfrRequestEvent
-   */
   static request(form: HTMLFormElement, detail: SyfrRequestEvent["detail"]) {
     form.dispatchEvent(
       new CustomEvent("request", { detail }) as SyfrRequestEvent
