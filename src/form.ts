@@ -51,35 +51,37 @@ export class SyfrForm {
       ...(!(linkEl instanceof HTMLAnchorElement) && {
         linkHref: { got: linkEl, want: `<a href='${href}' ...` },
       }),
+      ...(!this.id.match(
+        /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i
+      ) && { syfrId: { got: this.id, want: "a valid uuid from Syfr" } }),
     };
     if (Object.keys(issues).length < 1 && linkEl instanceof HTMLAnchorElement) {
       let area = linkEl.offsetWidth * linkEl.offsetHeight;
       issues = {
         ...issues,
         ...(linkEl.offsetParent === null && {
-          isHidden: { got: true, want: false },
+          validationLinkIsHidden: { got: true, want: false },
         }),
         ...(linkEl.href != href && {
-          href: { have: linkEl.href, need: href },
+          validationLinkHref: { have: linkEl.href, need: href },
         }),
         ...(linkEl.relList.contains("nofollow") && {
-          isNoFollow: { got: true, want: false },
+          validationLinkIsNofollow: { got: true, want: false },
         }),
         ...(linkEl.relList.contains("noreferrer") && {
-          isNoReferrer: { got: true, want: false },
+          validationLinkIsNoreferrer: { got: true, want: false },
         }),
         ...(area < 1500 && {
-          area: { got: area, want: 1500 },
+          validationLinkArea: { got: area, want: 1500 },
         }),
       };
     }
     if (Object.keys(issues).length > 0) {
       throw {
-        syfrId: this.id,
         form: this.form,
         issues,
-        error: `Form needs a correct validation link`,
-        see: "https://syfr.app/docs/validation",
+        error: `We can't protect your form because of the issues listed`,
+        seeDocs: "https://syfr.app/docs/validation",
       };
     }
     return true;
