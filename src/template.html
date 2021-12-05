@@ -24,6 +24,14 @@
             }
           });
 
+          form.addEventListener("invalid", (event) => {
+            console.error(event);
+          });
+
+          form.addEventListener("valid", (event) => {
+            console.log(event);
+          });
+
           form.addEventListener("transmit", (event) => {
             console.log("transmitEvent", event.detail);
           });
