@@ -6,7 +6,8 @@
   "scripts": {
     "prepare": "webpack --config webpack.config.js --env production",
     "develop": "webpack --config webpack.config.js --env staging",
-    "release": "release-it --only-version"
+    "release": "release-it --ci",
+    "checkRelease": "release-it --ci --dry-run"
   },
   "files": [
     "dist/main.sha256-*.js"
