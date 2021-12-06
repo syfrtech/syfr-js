@@ -1,6 +1,12 @@
 # Syfr - Form Cipher scripts
 
-## Usage
+## Production Usage
+
+The minified javascript is available at: https://js.syfr.app/2.0.2/formCipher.min.js
+
+Integrity SHA values at: https://js.syfr.app/2.0.2/assets-manifest.json
+
+## Development
 
 **do not push your changes directly**
 
