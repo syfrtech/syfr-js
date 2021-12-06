@@ -27,6 +27,9 @@
           { "type": "test", "hidden": true }
         ]
       }
+    },
+    "@release-it/bumper": {
+      "out": "README.md"
     }
   }
 }
