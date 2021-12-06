@@ -1,3 +1,10 @@
+## [2.1.0](https://github.com/syfrtech/entry-js/compare/2.0.3...2.1.0) (2021-12-06)
+
+
+### Features
+
+* replace camelCase with hyphenated ([97a94d6](https://github.com/syfrtech/entry-js/commit/97a94d6a895827ed7ac4d3286991a7b827ac1158))
+
 ### [2.0.3](https://github.com/syfrtech/entry-js/compare/2.0.2...2.0.3) (2021-12-06)
 
 
