@@ -12,5 +12,6 @@
   - ex: commit `fix: small bugfix` increments patch-level (`1.2.3 ~> 1.2.4`)
   - ex: commit `feat: my new feature` increments minor-level (`1.2.3 ~> 1.3.0`)
   - ex: commit `whatever /n /n BREAKING: beware we have made breaking changes` increments minor-level (`1.2.3 ~> 2.0.0`)
+  - typically, you can refer to `.release-it.json.plugins.@release-it/conventional-changelog`
 - run `yarn checkRelease` to perform a dry-run and make sure appropriate actions will be taken
 - run `yarn release` to perform the release (this is set to prepare the bundle, commit, push to github, etc)
