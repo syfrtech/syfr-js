@@ -1,3 +1,10 @@
+### [2.0.1](https://github.com/syfrtech/entry-js/compare/2.0.0...2.0.1) (2021-12-06)
+
+
+### Documentation
+
+* note conventional commits ([cf38ea1](https://github.com/syfrtech/entry-js/commit/cf38ea124cbe3081a86b5ca767cd3aa73e97988a))
+
 ## [2.0.0](https://github.com/syfrtech/entry-js/compare/1.0.4...2.0.0) (2021-12-06)
 
 
