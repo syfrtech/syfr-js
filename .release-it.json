@@ -7,12 +7,12 @@
     "requireCommits": true,
     "addUntrackedFiles": false,
     "commit": true,
-    "commitMessage": "Release ${version}",
+    "commitMessage": "Release v${version}",
     "commitArgs": [],
     "tag": true,
     "tagName": null,
     "tagMatch": null,
-    "tagAnnotation": "Release ${version}",
+    "tagAnnotation": "Release v${version}",
     "tagArgs": [],
     "push": true,
     "pushArgs": ["--follow-tags"],
@@ -23,5 +23,24 @@
   },
   "npm": {
     "publish": false
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "infile": "CHANGELOG.md",
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          {
+            "type": "feat",
+            "section": "Features"
+          },
+          {
+            "type": "fix",
+            "section": "Bug Fixes"
+          },
+          {}
+        ]
+      }
+    }
   }
 }
