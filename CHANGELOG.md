@@ -1,3 +1,5 @@
+### [1.0.4](https://github.com/syfrtech/entry-js/compare/1.0.3...1.0.4) (2021-12-06)
+
 ### 1.0.3 (2021-12-06)
 
 
