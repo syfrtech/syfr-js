@@ -1,6 +1,12 @@
 import { SyfrForm } from "./form";
 
 /**
+ * Released according to Semantic Version
+ * @see https://semver.org/
+ *
+ * Adheres to Conventional Commits
+ * @see https://www.conventionalcommits.org/en/v1.0.0/
+ *
  * Check every form for the `data-syfrId` attribute
  * `data-syfrId` attribute will trigger processTheForm() on submit
  *
