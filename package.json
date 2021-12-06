@@ -6,8 +6,7 @@
   "scripts": {
     "build": "yarn webpack",
     "webpack": "webpack --config webpack.config.js",
-    "release": "release-it",
-    "dryrelease": "release-it --dry-run"
+    "release": "release-it"
   },
   "files": [
     "dist/main.sha256-*.js"
