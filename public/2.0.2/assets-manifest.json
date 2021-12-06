@@ -1,0 +1,10 @@
+{
+  "formCipher.min.js": {
+    "src": "formCipher.min.js",
+    "integrity": "sha256-EpgoQL5aocICfvAkZ9Pb2b+EvUrAwWgTInlEH7v6wW4= sha384-mHmFBm2gwZv9OfNkHedRdgq4fjqzs8rQMPdzh8m27XxsE8E9X9oT2uHg3ohJNrXt sha512-5YZn2xKppz9M+18/0kjU6x/ek9VGk1IQIGP36DVhhXeoP9775+yuyfd4ieat0TIoNzQn7rdEo0ieiphfFWKCEw=="
+  },
+  "formCipher.min.js.map": {
+    "src": "formCipher.min.js.map",
+    "integrity": "sha256-Rns1gjxCgAeX1SEKtT+1dPuGB6ZKaJ/Exgpa5GgxcWI= sha384-7paF9QfqYVPQmgXpxWRdN2dSyGlVYv6FbZ/3ve+DO+OGCUmRt7UbUYZb7aKnpsia sha512-P42lGeHo1AOfhGRQFFJF2okMJBvyVryKD0KM3VtHq2dVCADiyGzXHMte0tWYweVM6DBhNs890/1VddcewBBExw=="
+  }
+}
