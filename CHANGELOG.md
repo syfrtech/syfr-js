@@ -1,3 +1,15 @@
+### [2.0.3](https://github.com/syfrtech/entry-js/compare/2.0.2...2.0.3) (2021-12-06)
+
+
+### Fixes
+
+* add release-it version bumper ([88de0ba](https://github.com/syfrtech/entry-js/commit/88de0ba4e7cc895461961a2f7c5fafd9e5f50072))
+
+
+### Documentation
+
+* add liks to scripts in README ([9e63129](https://github.com/syfrtech/entry-js/commit/9e63129f106041bb926ecc43c65c74cafd32d598))
+
 ### [2.0.2](https://github.com/syfrtech/entry-js/compare/2.0.1...2.0.2) (2021-12-06)
 
 
