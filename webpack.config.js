@@ -11,7 +11,7 @@ module.exports = (env) => {
   var version = PACKAGE.version;
   let outputDir = env.production ? "public" : ".cache";
   let watch = !env.production;
-  let baseName = "formCipher";
+  let baseName = "form-cipher";
   return {
     mode: "production",
     devtool: "source-map",
