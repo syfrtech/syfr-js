@@ -1,3 +1,10 @@
+### [2.1.1](https://github.com/syfrtech/entry-js/compare/2.1.0...2.1.1) (2021-12-06)
+
+
+### Fixes
+
+* correct readme ([60a06c7](https://github.com/syfrtech/entry-js/commit/60a06c7351a76fc581273775cd949175bb50e674))
+
 ## [2.1.0](https://github.com/syfrtech/entry-js/compare/2.0.3...2.1.0) (2021-12-06)
 
 

@@ -1,0 +1,10 @@
+{
+  "form-cipher.min.js": {
+    "src": "form-cipher.min.js",
+    "integrity": "sha256-keChkm5vISwx/6yrHH269YRQEr0x+N3ubvsFk7NclWA= sha384-ZCIfm5JhykbSIoIo4HtIm2XU6AesGZv/QKiBEqIs997VT1rjR1qJvsEuTU6XiQqm sha512-+1R3WLnSmvOvO4Q5i+xaYJqHT9nmoUj6bZijShmJwZIlqV/dkxBiOkiSC7q4MvwPsTOeNJuScop4A+sME6x9bg=="
+  },
+  "form-cipher.min.js.map": {
+    "src": "form-cipher.min.js.map",
+    "integrity": "sha256-I0PyNFiF0NxZ1pvMfMwUVgXJmSdXzBKoFyYORhCXRJ0= sha384-TnKlCSGPfOvaIj55b4UGqjpFYn8MPOTM+eg4BOnK8J7TJWDRP3m3KqCpw561SYoF sha512-BPgtNz7MhZBs59/WhxwXCG88VeM8GAl2YXZN+qoLhRkMjHjKze2AE7isaV5tMKeDJm84nlA3PWubBm7wyxzGpw=="
+  }
+}
