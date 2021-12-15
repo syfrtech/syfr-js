@@ -20,3 +20,5 @@ window.addEventListener("DOMContentLoaded", () => {
     return;
   });
 });
+
+export { SyfrForm as Form };

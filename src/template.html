@@ -36,6 +36,7 @@
             console.log("transmitEvent", event.detail);
           });
         });
+        new Syfr.Form(document.getElementById("syfrButNoId"), "abc");
       });
     </script>
   </head>
@@ -279,6 +280,11 @@
     <br /><br />
     <form name="nonSyfr" id="nonSyfrForm">
       <button type="submit">Some other non-Syfr form</button>
+    </form>
+    <form name="syfrButNoId" id="syfrButNoId">
+      <button type="submit">
+        Manually add this form; it's missing data-syfr-id
+      </button>
     </form>
   </body>
 </html>

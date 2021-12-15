@@ -23,13 +23,13 @@ export class SyfrForm {
   jwes: JweMap = {}; // the JWEs which will be submitted to Syfr
   loading: boolean = false;
 
-  constructor(form: SyfrForm["form"]) {
+  constructor(form: SyfrForm["form"], syfrId?: Uuid) {
     this.form = form;
+    this.id = syfrId ?? this.form.dataset.syfrId;
     this.idCheck() && this.linkCheck() && this.autoSubmit();
   }
 
   idCheck() {
-    this.id = this.form.dataset.syfrId;
     if (this.id === undefined) {
       SyfrEvent.debug(this.form, {
         form: this.form,
