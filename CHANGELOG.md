@@ -1,3 +1,10 @@
+## [2.2.0](https://github.com/syfrtech/entry-js/compare/2.1.1...2.2.0) (2021-12-15)
+
+
+### Features
+
+* call Syfr.Form directly ([28326ae](https://github.com/syfrtech/entry-js/commit/28326aecc7d6ed70c94be8c037e2bf233e0e4d2f))
+
 ### [2.1.1](https://github.com/syfrtech/entry-js/compare/2.1.0...2.1.1) (2021-12-06)
 
 

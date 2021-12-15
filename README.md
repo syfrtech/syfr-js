@@ -2,9 +2,9 @@
 
 ## Production Usage
 
-The minified javascript is available at: https://js.syfr.app/2.1.1/form-cipher.min.js
+The minified javascript is available at: https://js.syfr.app/2.2.0/form-cipher.min.js
 
-Integrity SHA values at: https://js.syfr.app/2.1.1/assets-manifest.json
+Integrity SHA values at: https://js.syfr.app/2.2.0/assets-manifest.json
 
 ## Development
 
