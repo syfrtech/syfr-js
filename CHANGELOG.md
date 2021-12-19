@@ -1,3 +1,12 @@
+## [2.3.0](https://github.com/syfrtech/entry-js/compare/2.2.0...2.3.0) (2021-12-19)
+
+
+### Features
+
+* drop invalid events ([bb2d7aa](https://github.com/syfrtech/entry-js/commit/bb2d7aace748a05c8fc5b247cd9ee3c30f711f67))
+* enable custom link element ([48f57b3](https://github.com/syfrtech/entry-js/commit/48f57b39effafd502e3b55c2d17f059aa65f56a2))
+* improve link validation ([92c77c2](https://github.com/syfrtech/entry-js/commit/92c77c2df92d27122ad6183f7577c0420c9ad856))
+
 ## [2.2.0](https://github.com/syfrtech/entry-js/compare/2.1.1...2.2.0) (2021-12-15)
 
 
