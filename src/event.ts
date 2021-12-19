@@ -3,7 +3,6 @@ import {
   SyfrValidEvent,
   SyfrRequestEvent,
   SyfrTransmitEvent,
-  SyfrInvalidEvent,
 } from "./types";
 
 /**
@@ -72,12 +71,6 @@ export class SyfrEvent {
 
   static valid(form: HTMLFormElement, detail?: SyfrValidEvent["detail"]) {
     form.dispatchEvent(new CustomEvent("valid", { detail }) as SyfrValidEvent);
-  }
-
-  static invalid(form: HTMLFormElement, detail?: SyfrInvalidEvent["detail"]) {
-    form.dispatchEvent(
-      new CustomEvent("invalid", { detail }) as SyfrInvalidEvent
-    );
   }
 
   static transmit(form: HTMLFormElement, detail: SyfrTransmitEvent["detail"]) {
