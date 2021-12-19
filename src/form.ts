@@ -23,30 +23,33 @@ export class SyfrForm {
   jwes: JweMap = {}; // the JWEs which will be submitted to Syfr
   loading: boolean = false;
 
-  constructor(form: SyfrForm["form"], syfrId?: Uuid) {
+  constructor(
+    form: SyfrForm["form"],
+    syfrId?: Uuid,
+    anchor?: HTMLAnchorElement
+  ) {
     this.form = form;
     this.id = syfrId ?? this.form.dataset.syfrId;
-    this.idCheck() && this.linkCheck() && this.autoSubmit();
+    this.idCheck() && this.linkCheck(anchor) && this.autoSubmit();
   }
 
   idCheck() {
     if (this.id === undefined) {
       SyfrEvent.debug(this.form, {
         form: this.form,
-        message: "Ignored a form which didn't have a data-syfr-id attribute.",
+        message: "Ignoring; no data-syfr-id attribute",
       });
       return false;
     }
     return true;
   }
 
-  linkCheck() {
-    let linkId = `link-${this.id}`;
+  linkCheck(anchor?: HTMLAnchorElement) {
     let href = `https://syfr.app/validate/${this.id}`;
-    let linkEl = document.getElementById(linkId);
+    let linkEl = anchor ?? this.form.querySelector("[data-syfr-validate]");
     let issues = {
       ...(!linkEl && {
-        linkId: { got: linkEl, want: `<a id='${linkId}' ...` },
+        linkMissing: { got: linkEl, want: `<a data-syfr-validate ...` },
       }),
       ...(!(linkEl instanceof HTMLAnchorElement) && {
         linkHref: { got: linkEl, want: `<a href='${href}' ...` },

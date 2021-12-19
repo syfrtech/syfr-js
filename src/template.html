@@ -32,7 +32,11 @@
             console.log("transmitEvent", event.detail);
           });
         });
-        new Syfr.Form(document.getElementById("syfrButNoId"), "abc");
+        new Syfr.Form(
+          document.getElementById("syfrButNoId"),
+          "e6916695-2374-4144-8d7a-0c95baed0f4c", //fake
+          document.getElementById("syfrButNoIdLink")
+        );
       });
     </script>
   </head>
@@ -265,7 +269,7 @@
           <button type="submit">Place Order</button>
           <div>
             <a
-              id="link-<%= htmlWebpackPlugin.options.syfrFormId %>"
+              data-syfr-validate
               href="https://syfr.app/validate/<%= htmlWebpackPlugin.options.syfrFormId %>"
               >Protected by Syfr</a
             >
@@ -278,6 +282,11 @@
       <button type="submit">Some other non-Syfr form</button>
     </form>
     <form name="syfrButNoId" id="syfrButNoId">
+      <a
+        id="syfrButNoIdLink"
+        href="https://syfr.app/validate/e6916695-2374-4144-8d7a-0c95baed0f4c"
+        >Encrypted Form
+      </a>
       <button type="submit">
         Manually add this form; it's missing data-syfr-id
       </button>
