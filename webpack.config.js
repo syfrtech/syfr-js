@@ -9,7 +9,7 @@ var PACKAGE = require("./package.json");
 
 module.exports = (env) => {
   var version = PACKAGE.version;
-  let outputDir = env.production ? "public" : ".cache";
+  let outputDir = env.production ? `public/${version}` : ".cache";
   let watch = !env.production;
   let baseName = "form-cipher";
   return {
@@ -20,7 +20,7 @@ module.exports = (env) => {
     },
     output: {
       filename: `${baseName}.min.js`,
-      path: path.resolve(__dirname, `${outputDir}/${version}`),
+      path: path.resolve(__dirname, `${outputDir}`),
       library: { name: "Syfr", type: "var" },
       crossOriginLoading: "anonymous",
       clean: {},
