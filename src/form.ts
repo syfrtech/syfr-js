@@ -51,19 +51,31 @@ export class SyfrForm {
       ...(!(linkEl instanceof HTMLAnchorElement) && {
         linkHref: { got: linkEl, want: `<a href='${href}' ...` },
       }),
+      ...(!this.form.contains(linkEl) && {
+        linkWithinForm: { got: false, want: true },
+      }),
       ...(!this.id.match(
         /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i
       ) && { syfrId: { got: this.id, want: "a valid uuid from Syfr" } }),
     };
     if (Object.keys(issues).length < 1 && linkEl instanceof HTMLAnchorElement) {
-      let area = linkEl.offsetWidth * linkEl.offsetHeight;
+      let cs = getComputedStyle(linkEl);
+      let pf = parseFloat;
+      let px = pf(cs.paddingLeft) + pf(cs.paddingRight);
+      let py = pf(cs.paddingTop) + pf(cs.paddingBottom);
+      let bx = pf(cs.borderLeftWidth) + pf(cs.borderRightWidth);
+      let by = pf(cs.borderTopWidth) + pf(cs.borderBottomWidth);
+      let heightPx = linkEl.offsetHeight - px - bx;
+      let widthPx = linkEl.offsetWidth - py - by;
+      let areaPx = heightPx * widthPx;
+      let fontSizePx = pf(cs.fontSize);
       issues = {
         ...issues,
         ...(linkEl.offsetParent === null && {
           validationLinkIsHidden: { got: true, want: false },
         }),
         ...(linkEl.href != href && {
-          validationLinkHref: { have: linkEl.href, need: href },
+          validationLinkHref: { got_: linkEl.href, want: href },
         }),
         ...(linkEl.relList.contains("nofollow") && {
           validationLinkIsNofollow: { got: true, want: false },
@@ -71,14 +83,18 @@ export class SyfrForm {
         ...(linkEl.relList.contains("noreferrer") && {
           validationLinkIsNoreferrer: { got: true, want: false },
         }),
-        ...(area < 1500 && {
-          validationLinkArea: { got: area, want: 1500 },
+        ...(areaPx < 1536 && {
+          validationLinkArea: { got: areaPx, want: 1536 },
+        }),
+        ...(fontSizePx < 8 && {
+          validationLinkFontSizePx: { got: fontSizePx, want: "8px+" },
         }),
       };
     }
     if (Object.keys(issues).length > 0) {
       throw {
         form: this.form,
+        link: linkEl,
         issues,
         error: `We can't protect your form because of the issues listed`,
         seeDocs: "https://syfr.app/docs/validation",
