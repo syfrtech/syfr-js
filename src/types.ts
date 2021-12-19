@@ -90,19 +90,6 @@ type SyfrValidEventDetail = { id: string; validateUrl: string };
 export type SyfrValidEvent = CustomEvent<SyfrValidEventDetail>;
 
 /**
- * Invalid `CustomEvent.detail` will not contain further detail.
- * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
- */
-type SyfrInvalidEventDetail = never;
-
-/**
- * Emitted when Syfr finds an issue which invalidates the form protection.
- * This is intended to provide a mechanism to disable the form and notify visitors.
- * Developers should use debug events or check console for thrown errors to debug.
- */
-export type SyfrInvalidEvent = CustomEvent<SyfrInvalidEventDetail>;
-
-/**
  * Transmit `CustomEvent.detail` provides an UNSTABLE a way to create your own webhooks.
  * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
  */
