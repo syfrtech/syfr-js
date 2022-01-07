@@ -8,6 +8,9 @@ Integrity SHA values at: https://js.syfr.app/2.3.0/assets-manifest.json
 
 ## Development
 
+- Commits adhere to [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
+- Releases adhere to [Semantic Versioning v2.0.0](https://semver.org/spec/v2.0.0.html)
+
 **do not push your changes directly**
 
 - create `.env` similar to `.env.example`
