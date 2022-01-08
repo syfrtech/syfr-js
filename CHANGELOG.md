@@ -1,3 +1,24 @@
+## [2.4.0-beta.0](https://github.com/syfrtech/entry-js/compare/2.3.0...2.4.0-beta.0) (2022-01-08)
+
+
+### Features
+
+* add react component ([0f0b0f5](https://github.com/syfrtech/entry-js/commit/0f0b0f5fcf0a248b129424ec1fd96af428fcba71))
+
+
+### Fixes
+
+* change cid type from string to JweCid ([3ffb0c7](https://github.com/syfrtech/entry-js/commit/3ffb0c78a97a5667afed3dfd82e812dbe6193bcd))
+* correct type issues ([85c480e](https://github.com/syfrtech/entry-js/commit/85c480e2981bdd9368fcf847e28c976843b898ac))
+* drop invalid event type ([b3f0a39](https://github.com/syfrtech/entry-js/commit/b3f0a3967bec182fc1e1cf83ee089fff086b94d3))
+* extend tsconfig ([6978537](https://github.com/syfrtech/entry-js/commit/69785378e1ac887206e9fcdb8d4277867e55ea5a))
+* more explicity ts types ([86cc532](https://github.com/syfrtech/entry-js/commit/86cc53285ab3c6358944dd388931eb45235fc96c))
+* rename SyfrForm ([7c21596](https://github.com/syfrtech/entry-js/commit/7c21596965f31731014d228f2447f83f23224d62))
+* set development mode ([4acab81](https://github.com/syfrtech/entry-js/commit/4acab8187b9d3cf45d667221817509dfab29055d))
+* set received jwk to be SyfrJwk type ([27798d9](https://github.com/syfrtech/entry-js/commit/27798d9325ab456eeb117c4602bdd4451cd14273))
+* simplify output for dev ([bbb2c23](https://github.com/syfrtech/entry-js/commit/bbb2c236d988d07536ce96eb9d34ec713e20c1f2))
+* toggle development mode output in webpack ([adcbe49](https://github.com/syfrtech/entry-js/commit/adcbe4954f528637739292b82bd2a1e36d9b8ed4))
+
 ## [2.3.0](https://github.com/syfrtech/entry-js/compare/2.2.0...2.3.0) (2021-12-19)
 
 
