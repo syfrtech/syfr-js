@@ -34,3 +34,4 @@ Integrity SHA values at: https://js.syfr.app/2.3.0/assets-manifest.json
   - Check the release number is what you expect
   - check the release link to confirm the changelog is as expected
 - run `yarn release` to perform the release (this is set to prepare the bundle, commit, push to github, etc)
+- for pre-release, [use pre-release commands](https://github.com/release-it/release-it/blob/master/docs/pre-releases.md), such as `yarn checkRelease minor --preRelease=beta` or `yarn release major --preRelease`
