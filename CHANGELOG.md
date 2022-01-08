@@ -1,3 +1,10 @@
+### [2.4.1-beta.0](https://github.com/syfrtech/entry-js/compare/2.4.0...2.4.1-beta.0) (2022-01-08)
+
+
+### Fixes
+
+* disable auto git push ([7dbe584](https://github.com/syfrtech/entry-js/commit/7dbe584ccbf4e68ada105a00096582b4a3e8e664))
+
 ## [2.4.0](https://github.com/syfrtech/entry-js/compare/2.4.0-beta.1...2.4.0) (2022-01-08)
 
 ## [2.4.0-beta.1](https://github.com/syfrtech/entry-js/compare/2.4.0-beta.0...2.4.0-beta.1) (2022-01-08)

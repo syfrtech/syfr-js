@@ -1,0 +1,18 @@
+{
+  "form-cipher-react.js": {
+    "src": "form-cipher-react.min.js",
+    "integrity": "sha256-BxYnlja5uKBA3ndnSEdITyLzmLUNT9O44NEIcIjHCVU= sha384-TmGOmztPKb5GMinsGProBH2vVypiiawZ52dqMRzPW5PYLgBHLjI+Ktu34KLYUmIz sha512-KNcixWOWUCG0ZQavoMxeVjXkQdBuNRYL2FotFbzS49YiiZqv2TtKO5PKtK8/nk9Z0icsM5MZ9C6wqbFEmPxYrw=="
+  },
+  "form-cipher-react.min.js.map": {
+    "src": "form-cipher-react.min.js.map",
+    "integrity": "sha256-klYH65MK/AI/tqstklnW2SLON++q0DV56kpkAqCI37w= sha384-suqEUvo3O4iB2Tw7c4Tmfy6tFGQkMkyib2XYSJkHTF+FhwlhlQiRFUGaZ8Qp4ge6 sha512-Y1OAkTt20jJky+FnwFvt/TunbYC9TwgtVBmc5mWACzKxNKEdzFNj6e6kMQrCWWbWdHCxYHRBJLF3oo9Zf3aLfQ=="
+  },
+  "form-cipher.min.js": {
+    "src": "form-cipher.min.js",
+    "integrity": "sha256-V6R09CSdDjQivIAlPOO3Lf87F/4abyzlLW8r4duyERw= sha384-YQc3k/cPAw8olWiP+AI77gSofv3N/ciSjS2AHHrboSq/McDpgtBLBxJkDm+SUoNg sha512-dQxaCS5oQ0U+eOlI+vJm8rFCM/I0MHHnku0q6nl153ZDJVeZpFM3Gi/4pv8pb4ZYjyubTNr8qDtAed86Jam8pg=="
+  },
+  "form-cipher.min.js.map": {
+    "src": "form-cipher.min.js.map",
+    "integrity": "sha256-uMZqEJ0frx0D2sMjtN+MQ4rltNnuxNusKiLEaeC0DRo= sha384-8UjMftgpAsHKenx3u6nJnxb5jOCqdzRPIH+YLikP+fzxvij4p4O+xtjSGiQ8n0DH sha512-ualQI/HZKROgEGvlJy+PUXEmeTb/gOh7UW61967h7JJ4L7/wCbXMWam+DxGCKm4jgiVfLjizHmyugPY8rZsBoQ=="
+  }
+}
