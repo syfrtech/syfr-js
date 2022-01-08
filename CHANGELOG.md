@@ -1,3 +1,11 @@
+## [2.4.0-beta.1](https://github.com/syfrtech/entry-js/compare/2.4.0-beta.0...2.4.0-beta.1) (2022-01-08)
+
+
+### Fixes
+
+* clarify docs on pushing changes ([587913a](https://github.com/syfrtech/entry-js/commit/587913aef63a1178bc9f1626e4e87f1c6ea72496))
+* update files path in package ([ca51beb](https://github.com/syfrtech/entry-js/commit/ca51bebfb8d3c87c69d28b4a1d4b2a43ac74336b))
+
 ## [2.4.0-beta.0](https://github.com/syfrtech/entry-js/compare/2.3.0...2.4.0-beta.0) (2022-01-08)
 
 
