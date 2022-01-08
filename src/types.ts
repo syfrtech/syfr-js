@@ -16,15 +16,18 @@ import { JWK } from "jose";
 export type SyfrJwk = JWK & {
   use: "enc";
   key_ops: Array<"wrapKey" | "unwrapKey">;
-  kid: string;
-};
+} & Required<Pick<JWK, "kid" | "alg">>;
+
+export type SyfrJweContentItem = string | FileJweMeta | undefined;
 
 /**
  * @param data is a map of form data, but Files must be converted to FileJweMeta
  * @param code is the serialized HTML representing the form
  */
 export type SyfrJweContent = {
-  data: { [k: string]: string };
+  data: {
+    [k: string]: SyfrJweContentItem | SyfrJweContentItem[];
+  };
   code: String;
 };
 
