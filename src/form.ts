@@ -6,6 +6,7 @@ import {
   FileJweMeta,
   JweCid,
   JweMap,
+  SyfrJweContent,
   SyfrJwk,
   Uuid,
 } from "./types";
@@ -18,8 +19,8 @@ import {
 export class SyfrForm {
   id: Uuid; // the UUID of the form in Syfr
   form: HTMLFormElement; // the DOM representation of the form
-  pubKey: CryptoKey; // the CryptoKey from the JWK to encrypt the formdata
-  pubJwk: SyfrJwk; // the JWK from Syfr to encrypt the formdata
+  pubKey?: CryptoKey; // the CryptoKey from the JWK to encrypt the formdata
+  pubJwk?: SyfrJwk; // the JWK from Syfr to encrypt the formdata
   jwes: JweMap = {}; // the JWEs which will be submitted to Syfr
   loading: boolean = false;
 
@@ -29,7 +30,7 @@ export class SyfrForm {
     anchor?: HTMLAnchorElement
   ) {
     this.form = form;
-    this.id = syfrId ?? this.form.dataset.syfrId;
+    this.id = syfrId ?? form.dataset.syfrId ?? "";
     this.idCheck() && this.linkCheck(anchor) && this.autoSubmit();
   }
 
@@ -106,19 +107,26 @@ export class SyfrForm {
     return true;
   }
 
-  async getKey() {
-    if (this.pubKey) {
-      return this.pubKey;
+  async getJwk() {
+    if (this.pubJwk) {
+      return this.pubJwk;
     }
     try {
-      this.pubJwk = await fetchJwk(this.id);
-      this.pubKey = await keyFromJwk(this.pubJwk);
+      return await fetchJwk(this.id);
     } catch (e) {
       throw {
         syfrId: this.id,
         error: "Bad data-syfr-id or couldn't get pubKey",
       };
     }
+  }
+
+  async getKey() {
+    if (this.pubKey) {
+      return this.pubKey;
+    }
+    let pubJwk = await this.getJwk();
+    this.pubKey = await keyFromJwk(pubJwk);
     SyfrEvent.valid(this.form, {
       id: this.id,
       validateUrl: `https://syfr.app/validate/${this.id}`,
@@ -183,7 +191,7 @@ export class SyfrForm {
 
   async getData() {
     let srcFormData = new FormData(this.form);
-    let result = {};
+    let result: SyfrJweContent["data"] = {};
     for (let fieldName of srcFormData.keys()) {
       if (fieldName in result) {
         continue; //skip duplicate key (ex: a field can have multiple files using same key)
@@ -197,10 +205,12 @@ export class SyfrForm {
   }
 
   async buildRootJwe(stringifiableObj: object) {
+    const pubJwk = await this.getJwk();
+    const pubKey = await this.getKey();
     const byteArr = new TextEncoder().encode(JSON.stringify(stringifiableObj));
     const rootJwe = await makeCompactJwe(
-      this.pubJwk,
-      this.pubKey,
+      pubJwk,
+      pubKey,
       "application/json",
       byteArr,
       Object.keys(this.jwes)
@@ -221,10 +231,12 @@ export class SyfrForm {
   }
 
   async processFile(file: File) {
+    const pubJwk = await this.getJwk();
+    const pubKey = await this.getKey();
     if (file.size > 0) {
       let fileJwe = await makeCompactJwe(
-        this.pubJwk,
-        this.pubKey,
+        pubJwk,
+        pubKey,
         file.type,
         await this.fileToUint8(file)
       );
@@ -239,7 +251,7 @@ export class SyfrForm {
   }
 
   /**
-   * Drops file streams (no .text(), no .arrayBuffer(), .etc)
+   * Drops file streams (no .t`ex`t(), no .arrayBuffer(), .etc)
    */
   fileToMeta(file: File, jwe: CompactJwe) {
     let { name, lastModified, type } = file;
@@ -253,7 +265,9 @@ export class SyfrForm {
   }
 
   jweToCid(jwe: CompactJwe): JweCid {
-    return jwe.split(".")[4];
+    let response = jwe.split(".")[4];
+    if (!response) throw "Provided JWE was invalid";
+    return response;
   }
 
   async sendToSyfr() {
