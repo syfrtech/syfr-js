@@ -1,8 +1,16 @@
 {
-    "compilerOptions": {
-        // "noImplicitAny": true,
-        "target": "ES2019", //output
-        "module": "ES2020", //input
-        "moduleResolution": "node",
-    }
+  "compilerOptions": {
+    "target": "es6", //output
+    "module": "ES2020", //input
+    "moduleResolution": "node",
+    "jsx": "react",
+    "noEmit": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "strict": true
+  }
 }
