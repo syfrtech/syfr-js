@@ -1,3 +1,12 @@
+### [2.4.1-beta.1](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.0...2.4.1-beta.1) (2022-01-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* renamed SyfrForm to SyfrClass
+
+* Auto / Manual ([b2ff85b](https://github.com/syfrtech/entry-js/commit/b2ff85b1bd8e4789db48ceb8eb73efbed5f4dd9d))
+
 ### [2.4.1-beta.0](https://github.com/syfrtech/entry-js/compare/2.4.0...2.4.1-beta.0) (2022-01-08)
 
 
