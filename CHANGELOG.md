@@ -1,3 +1,12 @@
+### [2.4.1-beta.3](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.2...2.4.1-beta.3) (2022-01-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* now named syfr-js
+
+* rename repo ([fba492a](https://github.com/syfrtech/entry-js/commit/fba492a5552ef1a6781a029fdcdbc27e742168a2))
+
 ### [2.4.1-beta.2](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.1...2.4.1-beta.2) (2022-01-08)
 
 
