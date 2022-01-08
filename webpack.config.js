@@ -12,14 +12,29 @@ module.exports = (env) => {
   let outputDir = env.production ? `public/${version}` : ".cache";
   let watch = !env.production;
   let baseName = "form-cipher";
+  let plugins = [new WebpackAssetsManifest({ integrity: true })];
+  if (env.development) {
+    plugins.push(
+      new HtmlWebpackPlugin({
+        filename: "demo.html",
+        template: "src/template.html",
+        syfrFormId: dotenv.parsed.SYFR_FORM_ID,
+        minify: false,
+      })
+    );
+  }
   return {
-    mode: "production",
-    devtool: "source-map",
+    mode: env.production ? "production" : "development",
+    devtool: env.production ? "source-map" : undefined,
     entry: {
-      [baseName + ".min"]: path.resolve(__dirname, "src/index.ts"),
+      [`${baseName}.min`]: path.resolve(__dirname, "src/index.ts"),
+      [`${baseName}-react`]: {
+        filename: `${baseName}-react${env.production ? ".min" : ""}.js`,
+        import: path.resolve(__dirname, "src/react.ts"),
+      },
     },
     output: {
-      filename: `${baseName}.min.js`,
+      filename: `${baseName}${env.production ? ".min" : ""}.js`,
       path: path.resolve(__dirname, `${outputDir}`),
       library: { name: "Syfr", type: "var" },
       crossOriginLoading: "anonymous",
@@ -38,14 +53,6 @@ module.exports = (env) => {
         },
       ],
     },
-    plugins: [
-      // new HtmlWebpackPlugin({
-      //   filename: "demo.html",
-      //   template: "src/template.html",
-      //   syfrFormId: dotenv.parsed.SYFR_FORM_ID,
-      //   minify: false,
-      // }),
-      new WebpackAssetsManifest({ integrity: true }),
-    ],
+    plugins,
   };
 };
