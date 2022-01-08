@@ -1,13 +1,15 @@
+import { SyfrJwk } from "./types";
+
 /**
  * @see https://github.com/syfrapp/api/issues/101
  */
 export async function fetchJwk(id: string) {
   let response = await fetch(
     "https://develop-api.syfr.app/rest/pub/form/" + id,
-    { method: "GET" }
+    { method: "GET", mode: "no-cors" }
   );
   let result = await response.json();
-  return result.publicJwk;
+  return result.publicJwk as SyfrJwk;
 }
 
 /**
