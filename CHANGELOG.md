@@ -1,3 +1,5 @@
+## [2.4.0](https://github.com/syfrtech/entry-js/compare/2.4.0-beta.1...2.4.0) (2022-01-08)
+
 ## [2.4.0-beta.1](https://github.com/syfrtech/entry-js/compare/2.4.0-beta.0...2.4.0-beta.1) (2022-01-08)
 
 
