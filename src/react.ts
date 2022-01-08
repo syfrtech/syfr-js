@@ -1,4 +1,4 @@
-import { SyfrForm as Syfr } from "./form";
+import { SyfrClass } from "./class";
 
 export function SyfrForm({
   syfrId,
@@ -7,6 +7,6 @@ export function SyfrForm({
   syfrId: string;
   Form: HTMLFormElement;
 }) {
-  new Syfr(Form, syfrId);
+  new SyfrClass(Form, syfrId);
   return Form;
 }

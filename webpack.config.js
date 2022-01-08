@@ -27,10 +27,14 @@ module.exports = (env) => {
     mode: env.production ? "production" : "development",
     devtool: env.production ? "source-map" : undefined,
     entry: {
-      [`${baseName}.min`]: path.resolve(__dirname, "src/index.ts"),
+      [`${baseName}.min`]: path.resolve(__dirname, "src/autodetect.ts"),
       [`${baseName}-react`]: {
         filename: `${baseName}-react${env.production ? ".min" : ""}.js`,
         import: path.resolve(__dirname, "src/react.ts"),
+      },
+      [`${baseName}-manual`]: {
+        filename: `${baseName}-manual${env.production ? ".min" : ""}.js`,
+        import: path.resolve(__dirname, "src/class.ts"),
       },
     },
     output: {

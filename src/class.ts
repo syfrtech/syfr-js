@@ -16,7 +16,7 @@ import {
  * Use event listeners to enhance user experience
  * @see SyfrEvent
  */
-export class SyfrForm {
+export class SyfrClass {
   id: Uuid; // the UUID of the form in Syfr
   form: HTMLFormElement; // the DOM representation of the form
   pubKey?: CryptoKey; // the CryptoKey from the JWK to encrypt the formdata
@@ -25,7 +25,7 @@ export class SyfrForm {
   loading: boolean = false;
 
   constructor(
-    form: SyfrForm["form"],
+    form: SyfrClass["form"],
     syfrId?: Uuid,
     anchor?: HTMLAnchorElement
   ) {
@@ -146,7 +146,7 @@ export class SyfrForm {
    */
   autoSubmit() {
     SyfrEvent.debug(this.form, {
-      message: "Initializing SyfrForm",
+      message: "Initializing SyfrClass",
       syfrId: this.id,
       form: this.form,
     });
