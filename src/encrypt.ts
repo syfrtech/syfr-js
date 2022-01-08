@@ -1,5 +1,5 @@
 import { importJWK, CompactEncrypt } from "jose";
-import { SyfrJwk } from "./types";
+import { JweCid, SyfrJwk } from "./types";
 
 /**
  * Parse the JWK to a CryptoKey and store both in the keychain
@@ -20,7 +20,7 @@ export async function makeCompactJwe(
   key: CryptoKey,
   cty: string,
   byteArr: Uint8Array,
-  cids?: string[]
+  cids?: JweCid[]
 ) {
   let protectedHeader = {
     alg: jwk.alg,
