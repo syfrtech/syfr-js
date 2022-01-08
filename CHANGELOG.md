@@ -1,3 +1,10 @@
+### [2.4.1-beta.2](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.1...2.4.1-beta.2) (2022-01-08)
+
+
+### Fixes
+
+* add main to package.json ([b2dcaaf](https://github.com/syfrtech/entry-js/commit/b2dcaaf19c3e5c4c2fea3b01d4c077c268cb008f))
+
 ### [2.4.1-beta.1](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.0...2.4.1-beta.1) (2022-01-08)
 
 
