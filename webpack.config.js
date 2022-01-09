@@ -48,9 +48,6 @@ module.exports = (env) => {
       [`${baseName}`]: {
         import: path.resolve(__dirname, "src/autodetect.ts"),
       },
-      [`${baseName}-react`]: {
-        import: path.resolve(__dirname, "src/react.ts"),
-      },
       [`${baseName}-manual`]: {
         import: path.resolve(__dirname, "src/class.ts"),
       },
@@ -68,7 +65,7 @@ module.exports = (env) => {
     },
     watch,
     resolve: {
-      extensions: [".ts", ".js"],
+      extensions: [".tsx", ".ts", ".js"],
     },
     module: {
       rules: [
