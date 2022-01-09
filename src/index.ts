@@ -1,4 +1,2 @@
-import { SyfrClass } from "./class";
-import { SyfrForm } from "./react";
-
-export { SyfrClass, SyfrForm };
+export { SyfrClass } from "./class";
+export { SyfrForm } from "./react";
