@@ -1,3 +1,16 @@
+### [2.4.1-beta.5](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.4...2.4.1-beta.5) (2022-01-09)
+
+
+### Fixes
+
+* include typescript sourcemap ([c5129e3](https://github.com/syfrtech/entry-js/commit/c5129e3fd839cae3fa8837fa05e0a7f02b8ec571))
+
+
+### Documentation
+
+* add note for webpack ([8f451df](https://github.com/syfrtech/entry-js/commit/8f451dfbab6180281fc149fa5a102caedc5d7e6a))
+* add usage examples ([dfe7437](https://github.com/syfrtech/entry-js/commit/dfe7437bee2a7fe52651a8b2ae44a7f8c4bcc775))
+
 ### [2.4.1-beta.4](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.3...2.4.1-beta.4) (2022-01-09)
 
 
