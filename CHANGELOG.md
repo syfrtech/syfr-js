@@ -1,3 +1,10 @@
+### [2.4.1-beta.10](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.9...2.4.1-beta.10) (2022-01-09)
+
+
+### Fixes
+
+* wrap children with Fragment ([ebbe0a4](https://github.com/syfrtech/entry-js/commit/ebbe0a4b0c7f53ad3878eea0662b9ddef89b8003))
+
 ### [2.4.1-beta.9](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.8...2.4.1-beta.9) (2022-01-09)
 
 
