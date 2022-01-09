@@ -9,10 +9,15 @@ var PACKAGE = require("./package.json");
 
 module.exports = (env) => {
   var version = PACKAGE.version;
-  let outputDir = env.production ? `public/${version}` : ".cache";
+  let outputDir = env.production ? `public` : ".cache";
   let watch = !env.production;
   let baseName = "form-cipher";
-  let plugins = [new WebpackAssetsManifest({ integrity: true })];
+  let plugins = [
+    new WebpackAssetsManifest({
+      integrity: true,
+      output: `${env.production ? `${version}/` : ""}assets-manifest.json`,
+    }),
+  ];
   if (env.development) {
     plugins.push(
       new HtmlWebpackPlugin({
@@ -27,13 +32,13 @@ module.exports = (env) => {
     mode: env.production ? "production" : "development",
     devtool: env.production ? "source-map" : undefined,
     entry: {
-      [`${baseName}.min`]: path.resolve(__dirname, "src/autodetect.ts"),
+      [`${baseName}`]: {
+        import: path.resolve(__dirname, "src/autodetect.ts"),
+      },
       [`${baseName}-react`]: {
-        filename: `${baseName}-react${env.production ? ".min" : ""}.js`,
         import: path.resolve(__dirname, "src/react.ts"),
       },
       [`${baseName}-manual`]: {
-        filename: `${baseName}-manual${env.production ? ".min" : ""}.js`,
         import: path.resolve(__dirname, "src/class.ts"),
       },
       [`main`]: {
@@ -42,11 +47,11 @@ module.exports = (env) => {
       },
     },
     output: {
-      filename: `${baseName}${env.production ? ".min" : ""}.js`,
+      filename: `${env.production ? `${version}/[name].min` : "[name]"}.js`,
       path: path.resolve(__dirname, `${outputDir}`),
       library: { name: "Syfr", type: "var" },
       crossOriginLoading: "anonymous",
-      clean: {},
+      clean: env.production ? false : true,
     },
     watch,
     resolve: {
