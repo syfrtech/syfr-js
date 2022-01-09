@@ -6,8 +6,10 @@ export function SyfrForm({
   children,
 }: {
   id: string;
-  children: HTMLFormElement;
+  children: React.ReactNode;
 }) {
-  new SyfrClass(children, id);
-  return <React.Fragment>{children}</React.Fragment>;
+  const formRef =
+    React.useRef<HTMLFormElement>() as React.MutableRefObject<HTMLFormElement>;
+  !!formRef.current && new SyfrClass(formRef.current, id);
+  return <form ref={formRef}>{children}</form>;
 }
