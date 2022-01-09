@@ -1,12 +1,6 @@
 import { SyfrClass } from "./class";
 
-export function SyfrForm({
-  syfrId,
-  Form,
-}: {
-  syfrId: string;
-  Form: HTMLFormElement;
-}) {
-  new SyfrClass(Form, syfrId);
+export function SyfrForm({ id, Form }: { id: string; Form: HTMLFormElement }) {
+  new SyfrClass(Form, id);
   return Form;
 }
