@@ -1,3 +1,10 @@
+### [2.4.1-beta.7](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.6...2.4.1-beta.7) (2022-01-09)
+
+
+### Fixes
+
+* include type declarations ([da0b71b](https://github.com/syfrtech/entry-js/commit/da0b71bbebd20385a8f760de96e6748976186242))
+
 ### [2.4.1-beta.6](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.5...2.4.1-beta.6) (2022-01-09)
 
 
