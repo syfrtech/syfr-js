@@ -1,3 +1,10 @@
+### [2.4.1-beta.8](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.7...2.4.1-beta.8) (2022-01-09)
+
+
+### Fixes
+
+* attempt to use children ([b7074b5](https://github.com/syfrtech/entry-js/commit/b7074b530b2f026dad401bd577e42a4b4226ebc1))
+
 ### [2.4.1-beta.7](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.6...2.4.1-beta.7) (2022-01-09)
 
 

@@ -1,4 +1,4 @@
-export declare function SyfrForm({ id, Form }: {
+export declare function SyfrForm({ id, children, }: {
     id: string;
-    Form: HTMLFormElement;
+    children: HTMLFormElement;
 }): HTMLFormElement;
