@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6", //output
+    "target": "ES2017", //output
     "module": "ES2020", //input
     "moduleResolution": "node",
     "jsx": "react",
