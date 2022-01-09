@@ -1,10 +1,71 @@
 # Syfr - Form Cipher scripts
 
+The current javascript is available at:
+
+- [Standard Script](https://js.syfr.app/2.4.1-beta.4/form-cipher.min.js)
+- [Manual Script](https://js.syfr.app/2.4.1-beta.4/form-cipher-manual.min.js)
+- [Assets Manifest with subresource-integrity values](https://js.syfr.app/2.4.1-beta.4/assets-manifest.json)
+
 ## Production Usage
 
-The minified javascript is available at: https://js.syfr.app/2.4.1-beta.4/form-cipher.min.js
+### Script Element for HTML Example
 
-Integrity SHA values at: https://js.syfr.app/2.4.1-beta.4/assets-manifest.json
+Add the script to your code:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <script
+      defer
+      src="https://js.syfr.app/2.4.1-beta.4/formCipher.min.js"
+      crossorigin="anonymous"
+      integrity="sha256-...[use values from assets manifest]"
+    ></script>
+  </head>
+  <body>
+    ...
+  </body>
+</html>
+```
+
+Add the Syfr form UUID to your form
+
+```html
+<form data-syfr-id="aaaa-bbbb-ccc-dddd">...</form>
+```
+
+### Node Package Example
+
+`yarn install syfr-js`
+
+```js
+import { SyfrClass } from "syfr-js";
+window.addEventListener("DOMContentLoaded", () => {
+  let formsCollection = document.forms; // https://developer.mozilla.org/en-US/docs/Web/API/Document/forms
+  Array.from(formsCollection).forEach((form) => {
+    new SyfrClass(form);
+    return;
+  });
+});
+```
+
+Add the Syfr form UUID to your form
+
+```html
+<form data-syfr-id="aaaa-bbbb-ccc-dddd">...</form>
+```
+
+### React Package Example
+
+`yarn install syfr-js`
+
+```js
+import { SyfrForm } from "syfr-js";
+function myForm(props){
+  return <SyfrForm id="aaaa-bbbb-ccc-dddd" Form={<form>...</form>}>
+}
+```
 
 ## Development
 
