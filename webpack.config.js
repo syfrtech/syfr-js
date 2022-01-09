@@ -16,6 +16,16 @@ module.exports = (env) => {
     new WebpackAssetsManifest({
       integrity: true,
       output: `${env.production ? `${version}/` : ""}assets-manifest.json`,
+      customize(entry, original, manifest, asset) {
+        // You can prevent adding items to the manifest by returning false.
+        if (
+          entry.key.endsWith(".map") ||
+          entry.key.endsWith(".html") ||
+          entry.key === "main.js"
+        ) {
+          return false;
+        }
+      },
     }),
   ];
   if (env.development) {
