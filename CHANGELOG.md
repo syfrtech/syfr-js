@@ -1,3 +1,10 @@
+### [2.4.1-beta.11](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.10...2.4.1-beta.11) (2022-01-09)
+
+
+### Fixes
+
+* drop react from webpack browser exports ([b95a301](https://github.com/syfrtech/entry-js/commit/b95a3012d5a63f97e91b2d61dc93f46b38ca7505))
+
 ### [2.4.1-beta.10](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.9...2.4.1-beta.10) (2022-01-09)
 
 
