@@ -6,7 +6,7 @@ export function SyfrForm({
   children,
 }: {
   id: string;
-  children: React.ReactNode & HTMLFormElement;
+  children: HTMLFormElement;
 }) {
   new SyfrClass(children, id);
   return <React.Fragment>{children}</React.Fragment>;
