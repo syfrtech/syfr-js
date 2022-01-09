@@ -1,3 +1,10 @@
+### [2.4.1-beta.13](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.12...2.4.1-beta.13) (2022-01-09)
+
+
+### Fixes
+
+* useRef to access DOM element in React ([ffe3578](https://github.com/syfrtech/entry-js/commit/ffe3578a76b7de998cbb3096314bbfde33d23f2e))
+
 ### [2.4.1-beta.12](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.11...2.4.1-beta.12) (2022-01-09)
 
 
