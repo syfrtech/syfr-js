@@ -21,6 +21,7 @@ module.exports = (env) => {
         // You can prevent adding items to the manifest by returning false.
         // see https://github.com/webdeveric/webpack-assets-manifest/blob/master/examples/customized.js
         if (
+          entry.key.endsWith(".ts") ||
           entry.key.endsWith(".map") ||
           entry.key.endsWith(".html") ||
           entry.key === "main.js"
