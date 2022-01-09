@@ -1,3 +1,10 @@
+### [2.4.1-beta.6](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.5...2.4.1-beta.6) (2022-01-09)
+
+
+### Fixes
+
+* correct public path in manifest ([c25eaeb](https://github.com/syfrtech/entry-js/commit/c25eaeb9ea67749abf48d87102cf3b597e84ee0f))
+
 ### [2.4.1-beta.5](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.4...2.4.1-beta.5) (2022-01-09)
 
 
