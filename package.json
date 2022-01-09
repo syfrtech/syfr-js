@@ -9,10 +9,7 @@
     "release": "release-it --ci",
     "checkRelease": "release-it --ci --dry-run"
   },
-  "main": ".src/index.ts",
-  "files": [
-    "public/2.4.0-beta.0/*"
-  ],
+  "main": "public/main.js",
   "devDependencies": {
     "@release-it/bumper": "^3.0.1",
     "@release-it/conventional-changelog": "^3.3.0",

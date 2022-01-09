@@ -36,6 +36,10 @@ module.exports = (env) => {
         filename: `${baseName}-manual${env.production ? ".min" : ""}.js`,
         import: path.resolve(__dirname, "src/class.ts"),
       },
+      [`main`]: {
+        filename: `main.js`,
+        import: path.resolve(__dirname, "src/index.ts"),
+      },
     },
     output: {
       filename: `${baseName}${env.production ? ".min" : ""}.js`,
