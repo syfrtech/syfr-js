@@ -1,3 +1,10 @@
+### [2.4.1-beta.9](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.8...2.4.1-beta.9) (2022-01-09)
+
+
+### Fixes
+
+* return ReactNode children ([769f0d7](https://github.com/syfrtech/entry-js/commit/769f0d719abd6f70e1edb1d836ba8ec036e651cf))
+
 ### [2.4.1-beta.8](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.7...2.4.1-beta.8) (2022-01-09)
 
 
