@@ -9,5 +9,5 @@ export function SyfrForm({
   children: React.ReactNode & HTMLFormElement;
 }) {
   new SyfrClass(children, id);
-  return children;
+  return <React.Fragment>{children}</React.Fragment>;
 }
