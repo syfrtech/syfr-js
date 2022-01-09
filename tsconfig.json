@@ -12,6 +12,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noUncheckedIndexedAccess": true,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
     "sourceMap": true,
     "declaration": true,

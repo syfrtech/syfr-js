@@ -1,3 +1,4 @@
+import React from "react";
 import { SyfrClass } from "./class";
 
 export function SyfrForm({
@@ -5,7 +6,7 @@ export function SyfrForm({
   children,
 }: {
   id: string;
-  children: HTMLFormElement;
+  children: React.ReactNode & HTMLFormElement;
 }) {
   new SyfrClass(children, id);
   return children;
