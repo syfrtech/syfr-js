@@ -18,6 +18,7 @@ module.exports = (env) => {
       output: `${env.production ? `${version}/` : ""}assets-manifest.json`,
       customize(entry, original, manifest, asset) {
         // You can prevent adding items to the manifest by returning false.
+        // see https://github.com/webdeveric/webpack-assets-manifest/blob/master/examples/customized.js
         if (
           entry.key.endsWith(".map") ||
           entry.key.endsWith(".html") ||
