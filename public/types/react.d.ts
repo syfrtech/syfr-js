@@ -1,5 +1,5 @@
-import React from "react";
+/// <reference types="react" />
 export declare function SyfrForm({ id, children, }: {
     id: string;
-    children: React.ReactNode & HTMLFormElement;
+    children: HTMLFormElement;
 }): JSX.Element;

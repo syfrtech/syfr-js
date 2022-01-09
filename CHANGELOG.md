@@ -1,3 +1,10 @@
+### [2.4.1-beta.12](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.11...2.4.1-beta.12) (2022-01-09)
+
+
+### Fixes
+
+* set props children to be only HTMLFormElement ([230d292](https://github.com/syfrtech/entry-js/commit/230d2929c7833c29e25345e6ff284822a62054e1))
+
 ### [2.4.1-beta.11](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.10...2.4.1-beta.11) (2022-01-09)
 
 
