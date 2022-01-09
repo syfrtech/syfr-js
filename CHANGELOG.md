@@ -1,3 +1,25 @@
+### [2.4.1-beta.4](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.3...2.4.1-beta.4) (2022-01-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* now named syfr-js
+
+### Features
+
+* add main to public output ([cf52d7c](https://github.com/syfrtech/entry-js/commit/cf52d7c7aba5fddc67fcaa988566315211e053f8))
+* drop unneeded items from manifest ([2ce8bb2](https://github.com/syfrtech/entry-js/commit/2ce8bb2c74c1da5e36cf8a2daf143140b9624d95))
+
+
+* rename repo ([fba492a](https://github.com/syfrtech/entry-js/commit/fba492a5552ef1a6781a029fdcdbc27e742168a2))
+
+
+### Fixes
+
+* enable object.values requires ES2017 ([5aa2cee](https://github.com/syfrtech/entry-js/commit/5aa2ceee683abfc1510df349f382378821572e39))
+* improve webpack automation ([85a22f5](https://github.com/syfrtech/entry-js/commit/85a22f51d3e64faeea54804f476f0fe57abef8aa))
+* replace prepare with build ([79d58dc](https://github.com/syfrtech/entry-js/commit/79d58dcb7e7972b19d5b668fc1e955c96d8d1807))
+
 ### [2.4.1-beta.3](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.2...2.4.1-beta.3) (2022-01-08)
 
 
