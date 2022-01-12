@@ -9,10 +9,20 @@ type ReactFormProps = React.DetailedHTMLProps<
 
 export function useSyfrForm(id: SyfrFormId) {
   return ({ action, ...props }: ReactFormProps) => {
-    const ref = React.createRef<HTMLFormElement>();
-    if (!!ref.current) new SyfrClass(ref.current, id);
+    let [form, setForm] = React.useState<HTMLFormElement | null>();
+    React.useEffect(() => {
+      if (!!form) new SyfrClass(form, id);
+    }, [form]);
     // iOS needs an "action" attribute for nice input: https://stackoverflow.com/a/39485162/406725
     const _action = action ?? "#";
-    return <form ref={ref} action={_action} {...props} />;
+    return (
+      <form
+        ref={(element) => {
+          setForm(element);
+        }}
+        action={_action}
+        {...props}
+      />
+    );
   };
 }
