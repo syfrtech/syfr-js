@@ -1,3 +1,10 @@
+### [2.4.1-beta.16](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.15...2.4.1-beta.16) (2022-01-12)
+
+
+### Fixes
+
+* universalize webpack bundle ([cbc8af0](https://github.com/syfrtech/entry-js/commit/cbc8af0b48ba693f09739ea071a71af2573ce216))
+
 ### [2.4.1-beta.15](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.14...2.4.1-beta.15) (2022-01-12)
 
 

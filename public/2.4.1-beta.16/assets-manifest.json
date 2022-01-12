@@ -1,0 +1,14 @@
+{
+  "form-cipher-manual.js": {
+    "src": "https://js.syfr.app/2.4.1-beta.16/form-cipher-manual.min.js",
+    "integrity": "sha256-IWnAMjYOsryMIUaaYlF4gRUWxA7BgDkPHN2szHvOpuk= sha384-G/8QJFoEEQbzTopIyN3EtzWlAa2Ex9bEkjXwPgR5OiuFrcwENU+LR5Y45lint/Qi sha512-WKLpbzzGlylPN5ki3H18+r14BOpZy8myisrYat8hy+kBq+Xk3iR6E9kVQem8JEHey71p4DSn/1aUY6fZDQp7HQ=="
+  },
+  "form-cipher.js": {
+    "src": "https://js.syfr.app/2.4.1-beta.16/form-cipher.min.js",
+    "integrity": "sha256-XC4vbPVJBTD75pAQj41ROkPWnhZvExGJxXz3s8JHdHA= sha384-bU2q2Kn67wdJoQDuQfag7/C/sooybwAm+mWVeR5rveNaAWWrHO2YDMWj8As8KKo2 sha512-c7+DR57XRKE/MIh3Jcpnmxcq2jfw9jgU7hpxkUQj3zbKhQpAFbxfWABgxcshi8mcPG8ejkAHyRVoc0Lm0P6lYA=="
+  },
+  "main.js.LICENSE.txt": {
+    "src": "https://js.syfr.app/main.js.LICENSE.txt",
+    "integrity": "sha256-oK+xOQH+sVTfwQyaar6YFJoWZlod1YVa2DoJjutK2/Y= sha384-dYMpnyrfgIJ26uLculyE+nvUES/Vv7vbkNRngX31XyzqKM1xBeJgwqoh+ZNYBJxQ sha512-Czj+drNIjwrGUSc5/+Z8eoRUHzJyu+S7hXu1OyMVVKmOsjpb0+B9q6HIBQXA1bGotSybbWRqQIHQQ9q9fVeD4g=="
+  }
+}
