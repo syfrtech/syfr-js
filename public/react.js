@@ -14,7 +14,7 @@ import { SyfrClass } from "./class";
 export function useSyfrForm(id) {
     return (_a) => {
         var { action } = _a, props = __rest(_a, ["action"]);
-        const ref = React.useRef(null);
+        const ref = React.createRef();
         if (!!ref.current)
             new SyfrClass(ref.current, id);
         // iOS needs an "action" attribute for nice input: https://stackoverflow.com/a/39485162/406725

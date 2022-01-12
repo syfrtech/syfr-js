@@ -1,3 +1,10 @@
+### [2.4.1-beta.18](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.17...2.4.1-beta.18) (2022-01-12)
+
+
+### Fixes
+
+* create ref instead of use ([5eb320f](https://github.com/syfrtech/entry-js/commit/5eb320f5725c0ba705b71201438cadcacc171d95))
+
 ### [2.4.1-beta.17](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.16...2.4.1-beta.17) (2022-01-12)
 
 
