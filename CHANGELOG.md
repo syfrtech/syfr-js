@@ -1,3 +1,10 @@
+### [2.4.1-beta.14](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.13...2.4.1-beta.14) (2022-01-12)
+
+
+### Fixes
+
+* attempt useRef react component ([26cd3ff](https://github.com/syfrtech/entry-js/commit/26cd3ffc58325c35a58d49a783f5772d63644655))
+
 ### [2.4.1-beta.13](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.12...2.4.1-beta.13) (2022-01-09)
 
 

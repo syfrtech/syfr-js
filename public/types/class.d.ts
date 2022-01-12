@@ -1,17 +1,17 @@
-import { CompactJwe, FileJweMeta, JweCid, JweMap, SyfrJwk, Uuid } from "./types";
+import { CompactJwe, FileJweMeta, JweCid, JweMap, SyfrFormId, SyfrJwk } from "./types";
 /**
  * Automatically initialized when script is included.
  * Use event listeners to enhance user experience
  * @see SyfrEvent
  */
 export declare class SyfrClass {
-    id: Uuid;
+    id: SyfrFormId;
     form: HTMLFormElement;
     pubKey?: CryptoKey;
     pubJwk?: SyfrJwk;
     jwes: JweMap;
     loading: boolean;
-    constructor(form: SyfrClass["form"], syfrId?: Uuid, anchor?: HTMLAnchorElement);
+    constructor(form: SyfrClass["form"], syfrId?: SyfrFormId, anchor?: HTMLAnchorElement);
     idCheck(): boolean;
     linkCheck(anchor?: HTMLAnchorElement): boolean;
     getJwk(): Promise<SyfrJwk>;

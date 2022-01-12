@@ -57,6 +57,7 @@ export declare type JweCid = string;
 export declare type JweMap = {
     [cid: JweCid]: CompactJwe;
 };
+export declare type SyfrFormId = Uuid;
 /**
  * Debug `CustomEvent.detail` can be anything, anytime.  Intended to assist
  * developers.  Code should never depend on its contents or timing.
