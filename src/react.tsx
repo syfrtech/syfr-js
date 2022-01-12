@@ -7,7 +7,7 @@ type ReactFormProps = React.DetailedHTMLProps<
   HTMLFormElement
 >;
 
-export function useSyfrForm(id: SyfrFormId) {
+export const useSyfrForm = (id: SyfrFormId) => {
   return ({ action, ...props }: ReactFormProps) => {
     let [form, setForm] = React.useState<HTMLFormElement | null>();
     React.useEffect(() => {
@@ -26,4 +26,4 @@ export function useSyfrForm(id: SyfrFormId) {
       />
     );
   };
-}
+};
