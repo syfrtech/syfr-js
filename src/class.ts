@@ -6,9 +6,9 @@ import {
   FileJweMeta,
   JweCid,
   JweMap,
+  SyfrFormId,
   SyfrJweContent,
   SyfrJwk,
-  Uuid,
 } from "./types";
 
 /**
@@ -17,7 +17,7 @@ import {
  * @see SyfrEvent
  */
 export class SyfrClass {
-  id: Uuid; // the UUID of the form in Syfr
+  id: SyfrFormId; // the UUID of the form in Syfr
   form: HTMLFormElement; // the DOM representation of the form
   pubKey?: CryptoKey; // the CryptoKey from the JWK to encrypt the formdata
   pubJwk?: SyfrJwk; // the JWK from Syfr to encrypt the formdata
@@ -26,7 +26,7 @@ export class SyfrClass {
 
   constructor(
     form: SyfrClass["form"],
-    syfrId?: Uuid,
+    syfrId?: SyfrFormId,
     anchor?: HTMLAnchorElement
   ) {
     this.form = form;

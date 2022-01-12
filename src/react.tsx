@@ -1,15 +1,17 @@
 import React from "react";
 import { SyfrClass } from "./class";
+import { SyfrFormId } from "./types";
 
-export function SyfrForm({
-  id,
-  children,
-}: {
-  id: string;
-  children: React.ReactNode;
-}) {
-  const formRef =
-    React.useRef<HTMLFormElement>() as React.MutableRefObject<HTMLFormElement>;
-  !!formRef.current && new SyfrClass(formRef.current, id);
-  return <form ref={formRef}>{children}</form>;
+type ReactFormProps = React.DetailedHTMLProps<
+  React.FormHTMLAttributes<HTMLFormElement>,
+  HTMLFormElement
+>;
+export type SyfrFormProps = { id: SyfrFormId } & ReactFormProps;
+
+export function SyfrForm({ id, action, ...props }: SyfrFormProps) {
+  const ref = React.useRef<HTMLFormElement>(null);
+  if (!!ref.current) new SyfrClass(ref.current, id);
+  // iOS needs an "action" attribute for nice input: https://stackoverflow.com/a/39485162/406725
+  const _action = action ?? "#";
+  return <form ref={ref} action={_action} {...props} />;
 }
