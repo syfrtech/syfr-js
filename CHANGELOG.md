@@ -1,3 +1,10 @@
+### [2.4.1-beta.15](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.14...2.4.1-beta.15) (2022-01-12)
+
+
+### Features
+
+* convert to useSyfrForm ([ef30e09](https://github.com/syfrtech/entry-js/commit/ef30e099c1c253def3c53580f68cbc5be6ff15ab))
+
 ### [2.4.1-beta.14](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.13...2.4.1-beta.14) (2022-01-12)
 
 
