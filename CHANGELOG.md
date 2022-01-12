@@ -1,3 +1,10 @@
+### [2.4.1-beta.20](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.19...2.4.1-beta.20) (2022-01-12)
+
+
+### Fixes
+
+* require browser window ([c0a7e18](https://github.com/syfrtech/entry-js/commit/c0a7e188fa42cd56a68604e2cfb13abf37d26c8b))
+
 ### [2.4.1-beta.19](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.18...2.4.1-beta.19) (2022-01-12)
 
 
