@@ -11,7 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 import React from "react";
 import { SyfrClass } from "./class";
-export function useSyfrForm(id) {
+export const useSyfrForm = (id) => {
     return (_a) => {
         var { action } = _a, props = __rest(_a, ["action"]);
         let [form, setForm] = React.useState();
@@ -27,4 +27,4 @@ export function useSyfrForm(id) {
                 setForm(element);
             }, action: _action }, props)));
     };
-}
+};

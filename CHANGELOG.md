@@ -1,3 +1,10 @@
+### [2.4.1-beta.22](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.21...2.4.1-beta.22) (2022-01-12)
+
+
+### Fixes
+
+* convert to arrow function ([5fc8ad7](https://github.com/syfrtech/entry-js/commit/5fc8ad7a75b6eebfc182f6562c929cf838a11250))
+
 ### [2.4.1-beta.21](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.20...2.4.1-beta.21) (2022-01-12)
 
 
