@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2017", //output
+    "module": "ES2020", //input
+    "moduleResolution": "node",
+    "jsx": "react",
+    "noEmit": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "outDir": "public",
+    "declaration": true,
+    "declarationDir": "public/types",
+    "rootDir": "src/"
+  },
+  "files": ["src/index.ts"]
+}

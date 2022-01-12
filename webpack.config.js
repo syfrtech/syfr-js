@@ -51,15 +51,11 @@ module.exports = (env) => {
       [`${baseName}-manual`]: {
         import: path.resolve(__dirname, "src/class.ts"),
       },
-      [`main`]: {
-        filename: `main.js`,
-        import: path.resolve(__dirname, "src/index.ts"),
-      },
     },
     output: {
       filename: `${env.production ? `${version}/[name].min` : "[name]"}.js`,
       path: path.resolve(__dirname, `${outputDir}`),
-      library: { name: "Syfr", type: "umd" },
+      library: { name: "Syfr", type: "var" },
       crossOriginLoading: "anonymous",
       clean: env.production ? false : true,
     },

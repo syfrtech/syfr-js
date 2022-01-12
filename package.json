@@ -9,7 +9,7 @@
     "release": "release-it --ci",
     "checkRelease": "release-it --ci --dry-run"
   },
-  "main": "public/main.js",
+  "main": "public/index.js",
   "types": "public/types/index.d.ts",
   "devDependencies": {
     "@release-it/bumper": "^3.0.1",
