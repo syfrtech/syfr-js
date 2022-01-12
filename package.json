@@ -1,7 +1,7 @@
 {
   "name": "syfr-js",
   "homepage": "https://github.com/syfrtech/syfr-js",
-  "version": "2.4.1-beta.20",
+  "version": "2.4.1-beta.21",
   "license": "CC-BY-ND-4.0",
   "scripts": {
     "build": "webpack --config webpack.config.js --env production",

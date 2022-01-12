@@ -16,11 +16,13 @@ export function useSyfrForm(id) {
         var { action } = _a, props = __rest(_a, ["action"]);
         let [form, setForm] = React.useState();
         React.useEffect(() => {
-            if (typeof window !== "undefined" && !!form)
+            if (!!form)
                 new SyfrClass(form, id);
-        }, [form, window]);
+        }, [form]);
         // iOS needs an "action" attribute for nice input: https://stackoverflow.com/a/39485162/406725
         const _action = action !== null && action !== void 0 ? action : "#";
+        if (typeof window === "undefined")
+            return React.createElement(React.Fragment, null);
         return (React.createElement("form", Object.assign({ ref: (element) => {
                 setForm(element);
             }, action: _action }, props)));
