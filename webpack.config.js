@@ -59,7 +59,7 @@ module.exports = (env) => {
     output: {
       filename: `${env.production ? `${version}/[name].min` : "[name]"}.js`,
       path: path.resolve(__dirname, `${outputDir}`),
-      library: { name: "Syfr", type: "var" },
+      library: { name: "Syfr", type: "umd" },
       crossOriginLoading: "anonymous",
       clean: env.production ? false : true,
     },
