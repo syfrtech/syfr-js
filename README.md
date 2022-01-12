@@ -2,9 +2,9 @@
 
 The current javascript is available at:
 
-- [Standard Script](https://js.syfr.app/2.4.1-beta.16/form-cipher.min.js)
-- [Manual Script](https://js.syfr.app/2.4.1-beta.16/form-cipher-manual.min.js)
-- [Assets Manifest with subresource-integrity values](https://js.syfr.app/2.4.1-beta.16/assets-manifest.json)
+- [Standard Script](https://js.syfr.app/2.4.1-beta.17/form-cipher.min.js)
+- [Manual Script](https://js.syfr.app/2.4.1-beta.17/form-cipher-manual.min.js)
+- [Assets Manifest with subresource-integrity values](https://js.syfr.app/2.4.1-beta.17/assets-manifest.json)
 
 ## Production Usage
 
@@ -18,7 +18,7 @@ Add the script to your code:
   <head>
     <script
       defer
-      src="https://js.syfr.app/2.4.1-beta.16/formCipher.min.js"
+      src="https://js.syfr.app/2.4.1-beta.17/formCipher.min.js"
       crossorigin="anonymous"
       integrity="sha256-...[use values from assets manifest]"
     ></script>

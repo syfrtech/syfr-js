@@ -1,3 +1,10 @@
+### [2.4.1-beta.17](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.16...2.4.1-beta.17) (2022-01-12)
+
+
+### Features
+
+* drop webpack for tsc ([6369dff](https://github.com/syfrtech/entry-js/commit/6369dff4917d692020e3e4650b90d57844b89378))
+
 ### [2.4.1-beta.16](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.15...2.4.1-beta.16) (2022-01-12)
 
 

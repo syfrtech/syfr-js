@@ -1,0 +1,10 @@
+{
+  "form-cipher-manual.js": {
+    "src": "https://js.syfr.app/2.4.1-beta.17/form-cipher-manual.min.js",
+    "integrity": "sha256-LwMDm4C282/cB2TiVg+Tgt9R3pswo7kYb4FG13kDuv8= sha384-iP85DayjofQxIwPdF11IX1oSoF6J2JvcU0VV7ZuUVlwtR3cVaBcXPJmAalegR04n sha512-ldizkNgvC1PZVM3uAoheGKafONEG2dduOHGSfZSg217UTFSxyXIkusbJqqMTzSKzFbqfAdB7I6uINaniz9tEuw=="
+  },
+  "form-cipher.js": {
+    "src": "https://js.syfr.app/2.4.1-beta.17/form-cipher.min.js",
+    "integrity": "sha256-oavgprOBj0ohFS08ts76bIymdb1HNwQWOljSNWebPqc= sha384-+7CyiCL3KL/zadsfjxCfscKK0g6LaMOgUCZiTTtlX52d3W162mYMzR5QzthE/hT0 sha512-bu0Rc5BKETSW/1ItDv2jcEoYvih35cNyFImqvDmrhxv8ZMyXDxu7ztv3DailtM852whKPKazxnf3QodPoiNnYA=="
+  }
+}
