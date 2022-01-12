@@ -1,3 +1,10 @@
+### [2.4.1-beta.19](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.18...2.4.1-beta.19) (2022-01-12)
+
+
+### Features
+
+* convert to callback ref ([75ebb91](https://github.com/syfrtech/entry-js/commit/75ebb91c0f247cd1daf5082d4d378007c1dcd11b))
+
 ### [2.4.1-beta.18](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.17...2.4.1-beta.18) (2022-01-12)
 
 
