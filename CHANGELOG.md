@@ -1,3 +1,10 @@
+### [2.4.1-beta.24](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.23...2.4.1-beta.24) (2022-01-13)
+
+
+### Fixes
+
+* returns tuple type ([a5d69d2](https://github.com/syfrtech/entry-js/commit/a5d69d20eb7a302f46a5d9014eff97fb1e5b8c87))
+
 ### [2.4.1-beta.23](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.22...2.4.1-beta.23) (2022-01-13)
 
 
