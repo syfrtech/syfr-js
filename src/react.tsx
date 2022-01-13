@@ -32,5 +32,5 @@ export const useSyfrForm = (id: SyfrFormId) => {
       />
     );
   };
-  return [SyfrForm, form, linkProps];
+  return [SyfrForm, form, linkProps] as const;
 };
