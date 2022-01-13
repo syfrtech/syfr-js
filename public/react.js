@@ -12,9 +12,14 @@ var __rest = (this && this.__rest) || function (s, e) {
 import React from "react";
 import { SyfrClass } from "./class";
 export const useSyfrForm = (id) => {
-    return (_a) => {
+    let [form, setForm] = React.useState();
+    let linkProps = {
+        rel: "",
+        href: `https://syfr.app/validate/${id}`,
+        ["data-syfr-validate"]: true,
+    };
+    const SyfrForm = (_a) => {
         var { action } = _a, props = __rest(_a, ["action"]);
-        let [form, setForm] = React.useState();
         React.useEffect(() => {
             if (!!form)
                 new SyfrClass(form, id);
@@ -27,4 +32,5 @@ export const useSyfrForm = (id) => {
                 setForm(element);
             }, action: _action }, props)));
     };
+    return [SyfrForm, form, linkProps];
 };

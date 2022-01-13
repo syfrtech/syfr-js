@@ -1,3 +1,10 @@
+### [2.4.1-beta.23](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.22...2.4.1-beta.23) (2022-01-13)
+
+
+### Features
+
+* add form and linkprops ([26893b1](https://github.com/syfrtech/entry-js/commit/26893b12aabc8e63b9cce93fa920797bcae29af1))
+
 ### [2.4.1-beta.22](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.21...2.4.1-beta.22) (2022-01-12)
 
 
