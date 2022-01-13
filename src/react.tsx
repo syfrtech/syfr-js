@@ -8,8 +8,14 @@ type ReactFormProps = React.DetailedHTMLProps<
 >;
 
 export const useSyfrForm = (id: SyfrFormId) => {
-  return ({ action, ...props }: ReactFormProps) => {
-    let [form, setForm] = React.useState<HTMLFormElement | null>();
+  let [form, setForm] = React.useState<HTMLFormElement | null>();
+  let linkProps = {
+    rel: "",
+    href: `https://syfr.app/validate/${id}`,
+    ["data-syfr-validate"]: true,
+  };
+
+  const SyfrForm = ({ action, ...props }: ReactFormProps) => {
     React.useEffect(() => {
       if (!!form) new SyfrClass(form, id);
     }, [form]);
@@ -26,4 +32,5 @@ export const useSyfrForm = (id: SyfrFormId) => {
       />
     );
   };
+  return [SyfrForm, form, linkProps];
 };
