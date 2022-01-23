@@ -32,13 +32,9 @@
             console.log("transmitEvent", event.detail);
           });
         });
-        new Syfr.SyfrForm(
-          document.getElementById("syfrButNoId"),
-          "e6916695-2374-4144-8d7a-0c95baed0f4c", //fake
-          document.getElementById("syfrButNoIdLink")
-        );
       });
     </script>
+    <script defer src="form-cipher.js"></script>
   </head>
 
   <body>
@@ -47,7 +43,7 @@
       id="myForm"
       enctype="multipart/form-data"
       method="post"
-      data-syfr-id="<%= htmlWebpackPlugin.options.syfrFormId %>"
+      data-syfr-id="<%= htmlWebpackPlugin.options.syfrWhiteLabelFormId %>"
     >
       <h1>Demo Form</h1>
       <fieldset>
@@ -267,29 +263,8 @@
       <fieldset>
         <div>
           <button type="submit">Place Order</button>
-          <div>
-            <a
-              data-syfr-validate
-              href="https://syfr.app/validate/<%= htmlWebpackPlugin.options.syfrFormId %>"
-              >Protected by Syfr</a
-            >
-          </div>
         </div>
       </fieldset>
-    </form>
-    <br /><br />
-    <form name="nonSyfr" id="nonSyfrForm">
-      <button type="submit">Some other non-Syfr form</button>
-    </form>
-    <form name="syfrButNoId" id="syfrButNoId">
-      <a
-        id="syfrButNoIdLink"
-        href="https://syfr.app/validate/e6916695-2374-4144-8d7a-0c95baed0f4c"
-        >Encrypted Form
-      </a>
-      <button type="submit">
-        Manually add this form; it's missing data-syfr-id
-      </button>
     </form>
   </body>
 </html>

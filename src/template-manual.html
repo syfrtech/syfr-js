@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Example Form</title>
+    <script>
+      window.addEventListener("DOMContentLoaded", (event) => {
+        let myForm = document.getElementById("myForm");
+        let myFormValidateLink = document.getElementById("myFormValidateLink");
+        new Syfr.SyfrClass(
+          myForm,
+          "<%= htmlWebpackPlugin.options.syfrFormId %>",
+          myFormValidateLink
+        );
+        myForm.addEventListener("debug", (event) => {
+          console.log("debug", event.detail);
+        });
+
+        myForm.addEventListener("request", (event) => {
+          for (var key in event.detail) {
+            if (key.search("on") === 0) {
+              event.detail.addEventListener(key.slice(2), (event) => {
+                console.log("XHR Event", event);
+              });
+            }
+          }
+        });
+
+        myForm.addEventListener("valid", (event) => {
+          console.log(event);
+        });
+
+        myForm.addEventListener("transmit", (event) => {
+          console.log("transmitEvent", event.detail);
+        });
+      });
+    </script>
+    <script defer src="form-cipher-manual.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <form id="myForm" enctype="multipart/form-data" method="post">
+      <h1>Demo Form</h1>
+      <fieldset>
+        <legend>Personal details</legend>
+        <div>
+          <label
+            >First Name
+            <input
+              required
+              id="given-name"
+              name="given-name"
+              type="text"
+              placeholder="First name only"
+              autofocus=""
+            />
+          </label>
+        </div>
+        <div>
+          <label
+            >Last Name
+            <input
+              id="family-name"
+              name="family-name"
+              type="text"
+              placeholder="Last name only"
+              autofocus=""
+            />
+          </label>
+        </div>
+        <div>
+          <label
+            >Date of Birth
+            <input id="dob" name="dob" type="date" />
+          </label>
+        </div>
+        <div>
+          <label
+            >Email
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="example@domain.com"
+            />
+          </label>
+        </div>
+        <div>
+          <label
+            >URL
+            <input
+              id="url"
+              name="url"
+              type="url"
+              placeholder="http://mysite.com"
+            />
+          </label>
+        </div>
+        <div>
+          <label
+            >Telephone
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              placeholder="Eg. +447000 000000"
+            />
+          </label>
+        </div>
+        <div>
+          <label
+            >Shoesize
+            <input
+              id="shoes"
+              name="shoes"
+              type="number"
+              min="5"
+              max="18"
+              step="0.5"
+              value="9"
+            />
+          </label>
+        </div>
+        <div>
+          <label
+            >Flying Skill level (1 low - 100 high)
+            <input
+              id="skill"
+              name="skill"
+              type="range"
+              min="1"
+              max="100"
+              value="0"
+            />
+            <output name="output" onforminput="value=a.value">0</output>
+          </label>
+        </div>
+        <div>
+          <label for="avatar"
+            >Choose a profile picture:
+
+            <input
+              type="file"
+              id="avatar"
+              name="avatar"
+              accept="image/png, image/jpeg, image/svg+xml"
+              multiple
+          /></label>
+        </div>
+        <div>
+          <label for="attachments"
+            >Choose attachments:
+            <input type="file" id="attachments" name="attachments" multiple
+          /></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Billing address</legend>
+        <div>
+          <label
+            >Address
+            <textarea id="address" name="address" rows="5"></textarea>
+          </label>
+        </div>
+        <div>
+          <label
+            >Post code
+            <input id="postCode" name="postCode" type="text" />
+          </label>
+        </div>
+        <div>
+          <label
+            >Country
+            <input
+              id="country"
+              name="country"
+              list="country-names"
+              type="text"
+            />
+            <datalist id="country-names">
+              <option label="England" value="England"></option>
+              <option
+                label="Northern Ireland"
+                value="Northern Ireland"
+              ></option>
+              <option label="Ireland" value="Ireland"></option>
+              <option label="Scotland" value="Scotland"></option>
+              <option label="Wales" value="Wales"></option>
+            </datalist>
+          </label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Contact Preference</legend>
+        <div>
+          <input type="checkbox" name="contactBy" value="phone" checked />
+          <label for="phone">Phone</label>
+        </div>
+        <div>
+          <input type="checkbox" name="contactBy" value="email" checked />
+          <label for="email">E-Mail</label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Card details</legend>
+        <fieldset>
+          <legend>Card type</legend>
+          <div class="card-type">
+            <input id="visa" name="cardtype" type="radio" />
+            <label for="visa">VISA</label>
+            <input id="mastercard" name="cardtype" type="radio" />
+            <label for="mastercard">Mastercard</label>
+            <input id="amex" name="cardtype" type="radio" />
+            <label for="amex">AMEX</label>
+          </div>
+        </fieldset>
+        <div>
+          <label
+            >Name
+            <input
+              id="cardName"
+              name="cardName"
+              type="text"
+              placeholder="Name as it appears on your card"
+            />
+          </label>
+        </div>
+        <div>
+          <label
+            >Card number
+            <input
+              id="cardNo"
+              name="cardNo"
+              type="number"
+              title="The sixteen digit number across the middle of your card."
+            />
+          </label>
+        </div>
+        <div>
+          <label
+            >Security code
+            <input
+              id="security"
+              name="security"
+              type="number"
+              pattern="[0-9]{3}"
+              title="The last three digits on the back of your card."
+            />
+          </label>
+        </div>
+        <div>
+          <label
+            >Expiry Date
+            <input id="expiry" name="expiry" type="month" />
+          </label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div>
+          <button type="submit">Place Order</button>
+          <div>
+            <a
+              id="myFormValidateLink"
+              href="https://syfr.app/validate/<%= htmlWebpackPlugin.options.syfrFormId %>"
+              >Protected by Syfr</a
+            >
+          </div>
+        </div>
+      </fieldset>
+    </form>
+    <br /><br />
+    <form name="nonSyfr" id="nonSyfrForm">
+      <button type="submit">Some other non-Syfr form</button>
+    </form>
+  </body>
+</html>

@@ -34,10 +34,29 @@ module.exports = (env) => {
   if (env.development) {
     plugins.push(
       new HtmlWebpackPlugin({
-        filename: "demo.html",
-        template: "src/template.html",
+        filename: "demo-auto.html",
+        template: "src/template-auto.html",
         syfrFormId: dotenv.parsed.SYFR_FORM_ID,
         minify: false,
+        inject: false,
+      })
+    );
+    plugins.push(
+      new HtmlWebpackPlugin({
+        filename: "demo-whitelabel.html",
+        template: "src/template-whitelabel.html",
+        syfrWhiteLabelFormId: dotenv.parsed.SYFR_WHITELABEL_FORM_ID,
+        minify: false,
+        inject: false,
+      })
+    );
+    plugins.push(
+      new HtmlWebpackPlugin({
+        filename: "demo-manual.html",
+        template: "src/template-manual.html",
+        syfrFormId: dotenv.parsed.SYFR_FORM_ID,
+        minify: false,
+        inject: false,
       })
     );
   }
