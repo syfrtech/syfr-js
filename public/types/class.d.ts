@@ -1,4 +1,5 @@
-import { CompactJwe, FileJweMeta, JweCid, JweMap, SyfrFormId, SyfrJwk } from "./types";
+import { fetchFromApi } from "./request";
+import { CompactJwe, FileJweMeta, JweCid, JweMap, SyfrFormId } from "./types";
 /**
  * Automatically initialized when script is included.
  * Use event listeners to enhance user experience
@@ -7,14 +8,21 @@ import { CompactJwe, FileJweMeta, JweCid, JweMap, SyfrFormId, SyfrJwk } from "./
 export declare class SyfrClass {
     id: SyfrFormId;
     form: HTMLFormElement;
-    pubKey?: CryptoKey;
-    pubJwk?: SyfrJwk;
+    response?: Awaited<ReturnType<typeof fetchFromApi>> & {
+        publicKey: CryptoKey;
+    };
     jwes: JweMap;
     loading: boolean;
-    constructor(form: SyfrClass["form"], syfrId?: SyfrFormId, anchor?: HTMLAnchorElement);
-    idCheck(): boolean;
-    linkCheck(anchor?: HTMLAnchorElement): boolean;
-    getJwk(): Promise<SyfrJwk>;
+    link?: HTMLAnchorElement;
+    constructor(form: SyfrClass["form"], syfrId?: SyfrFormId, link?: HTMLAnchorElement);
+    linkCheck(): boolean;
+    api(): Promise<{
+        publicJwk: import("./types").SyfrJwk;
+        whiteLabel: boolean;
+    } & {
+        publicKey: CryptoKey;
+    }>;
+    getJwk(): Promise<import("./types").SyfrJwk>;
     getKey(): Promise<CryptoKey>;
     /**
      * Listens for the form submit (the SubmitEvent only fires if it succeeds validation)

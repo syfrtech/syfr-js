@@ -3,13 +3,12 @@ import { SyfrJwk } from "./types";
 /**
  * @see https://github.com/syfrapp/api/issues/101
  */
-export async function fetchJwk(id: string) {
+export async function fetchFromApi(id: string) {
   let response = await fetch(
     "https://develop-api.syfr.app/rest/pub/form/" + id,
-    { method: "GET", mode: "no-cors" }
+    { method: "GET" }
   );
-  let result = await response.json();
-  return result.publicJwk as SyfrJwk;
+  return (await response.json()) as { publicJwk: SyfrJwk; whiteLabel: boolean };
 }
 
 /**

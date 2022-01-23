@@ -2,7 +2,10 @@ import { SyfrJwk } from "./types";
 /**
  * @see https://github.com/syfrapp/api/issues/101
  */
-export declare function fetchJwk(id: string): Promise<SyfrJwk>;
+export declare function fetchFromApi(id: string): Promise<{
+    publicJwk: SyfrJwk;
+    whiteLabel: boolean;
+}>;
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
  * @see https://github.com/syfrapp/api/issues/103
