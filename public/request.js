@@ -1,10 +1,9 @@
 /**
  * @see https://github.com/syfrapp/api/issues/101
  */
-export async function fetchJwk(id) {
-    let response = await fetch("https://develop-api.syfr.app/rest/pub/form/" + id, { method: "GET", mode: "no-cors" });
-    let result = await response.json();
-    return result.publicJwk;
+export async function fetchFromApi(id) {
+    let response = await fetch("https://develop-api.syfr.app/rest/pub/form/" + id, { method: "GET" });
+    return (await response.json());
 }
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest

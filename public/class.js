@@ -1,36 +1,39 @@
 import { keyFromJwk, makeCompactJwe } from "./encrypt";
 import { SyfrEvent } from "./event";
-import { fetchJwk, pushToApi } from "./request";
+import { fetchFromApi, pushToApi } from "./request";
 /**
  * Automatically initialized when script is included.
  * Use event listeners to enhance user experience
  * @see SyfrEvent
  */
 export class SyfrClass {
-    constructor(form, syfrId, anchor) {
-        var _a;
+    constructor(form, syfrId, link) {
+        var _a, _b;
         this.jwes = {}; // the JWEs which will be submitted to Syfr
         this.loading = false;
         this.form = form;
-        this.id = (_a = syfrId !== null && syfrId !== void 0 ? syfrId : form.dataset.syfrId) !== null && _a !== void 0 ? _a : "";
-        this.idCheck() && this.linkCheck(anchor) && this.autoSubmit();
-    }
-    idCheck() {
-        if (this.id === undefined) {
-            SyfrEvent.debug(this.form, {
+        let id = syfrId !== null && syfrId !== void 0 ? syfrId : (_a = form.dataset) === null || _a === void 0 ? void 0 : _a.syfrId;
+        if (!id) {
+            throw {
                 form: this.form,
-                message: "Ignoring; no data-syfr-id attribute",
-            });
-            return false;
+                error: `Ignoring: no form id`,
+            };
         }
-        return true;
+        this.id = id;
+        this.link =
+            (_b = link !== null && link !== void 0 ? link : this.form.querySelector("[data-syfr-validate]")) !== null && _b !== void 0 ? _b : undefined;
+        this.autoSubmit();
     }
-    linkCheck(anchor) {
+    linkCheck() {
+        let linkEl = this.link;
+        if (!linkEl)
+            throw {
+                form: this.form,
+                error: `The form must have a validation link, ex: <a data-syfr-validate ...`,
+                seeDocs: "https://syfr.app/docs/validation",
+            };
         let href = `https://syfr.app/validate/${this.id}`;
-        let linkEl = anchor !== null && anchor !== void 0 ? anchor : this.form.querySelector("[data-syfr-validate]");
-        let issues = Object.assign(Object.assign(Object.assign(Object.assign({}, (!linkEl && {
-            linkMissing: { got: linkEl, want: `<a data-syfr-validate ...` },
-        })), (!(linkEl instanceof HTMLAnchorElement) && {
+        let issues = Object.assign(Object.assign(Object.assign({}, (!(linkEl instanceof HTMLAnchorElement) && {
             linkHref: { got: linkEl, want: `<a href='${href}' ...` },
         })), (!this.form.contains(linkEl) && {
             linkWithinForm: { got: false, want: true },
@@ -71,36 +74,39 @@ export class SyfrClass {
         }
         return true;
     }
-    async getJwk() {
-        if (this.pubJwk) {
-            return this.pubJwk;
-        }
+    async api() {
+        if (this.response)
+            return this.response;
         try {
-            return await fetchJwk(this.id);
+            let response = await fetchFromApi(this.id);
+            let publicKey = await keyFromJwk(response.publicJwk);
+            if (!response.whiteLabel) {
+                this.linkCheck();
+            }
+            this.response = Object.assign(Object.assign({}, response), { publicKey });
+            SyfrEvent.valid(this.form, {
+                id: this.id,
+                validateUrl: `https://syfr.app/validate/${this.id}`,
+            });
+            SyfrEvent.debug(this.form, {
+                id: this.id,
+                formPubKey: this.response.publicKey,
+                message: "use addEventListener('protected',(event)=>{...} to notify your users of the protection",
+            });
+            return this.response;
         }
         catch (e) {
             throw {
                 syfrId: this.id,
-                error: "Bad data-syfr-id or couldn't get pubKey",
+                error: "Bad data-syfr-id or some other error with API",
             };
         }
     }
+    async getJwk() {
+        return (await this.api()).publicJwk;
+    }
     async getKey() {
-        if (this.pubKey) {
-            return this.pubKey;
-        }
-        let pubJwk = await this.getJwk();
-        this.pubKey = await keyFromJwk(pubJwk);
-        SyfrEvent.valid(this.form, {
-            id: this.id,
-            validateUrl: `https://syfr.app/validate/${this.id}`,
-        });
-        SyfrEvent.debug(this.form, {
-            id: this.id,
-            formPubKey: this.pubKey,
-            message: "use addEventListener('protected',(event)=>{...} to notify your users of the protection",
-        });
-        return this.pubKey;
+        return (await this.api()).publicKey;
     }
     /**
      * Listens for the form submit (the SubmitEvent only fires if it succeeds validation)
@@ -112,7 +118,7 @@ export class SyfrClass {
             syfrId: this.id,
             form: this.form,
         });
-        this.getKey();
+        this.api(); // preload response
         this.form.addEventListener("submit", async (event) => {
             event.preventDefault();
             event.stopImmediatePropagation();
@@ -129,7 +135,7 @@ export class SyfrClass {
         });
     }
     async submit() {
-        this.pubKey || (await this.getKey());
+        await this.api();
         await this.buildEntry();
         await this.sendToSyfr();
     }

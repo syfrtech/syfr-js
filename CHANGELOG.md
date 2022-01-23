@@ -1,3 +1,16 @@
+### [2.4.1-beta.25](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.24...2.4.1-beta.25) (2022-01-23)
+
+
+### Features
+
+* add whiteLabel ([7e269e9](https://github.com/syfrtech/entry-js/commit/7e269e9dfb5414ba9e5eb80af8e3a76320d129ae))
+* separate demo html ([3ac73af](https://github.com/syfrtech/entry-js/commit/3ac73af747a6f7e826e7864fbbe10aaecadd2701))
+
+
+### Fixes
+
+* warn instead of throw for autoload ([76893f0](https://github.com/syfrtech/entry-js/commit/76893f0eaf1ec73a63057db0d04c3358c14c9343))
+
 ### [2.4.1-beta.24](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.23...2.4.1-beta.24) (2022-01-13)
 
 
