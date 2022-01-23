@@ -7,12 +7,18 @@ import { SyfrClass } from "./class";
  * @note data-syfr-id is converted to camelCase: syfrId
  * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset#name_conversion
  */
-export function autoDetectForms() {
+function autoDetectForms() {
   window.addEventListener("DOMContentLoaded", () => {
     let formsCollection = document.forms; // https://developer.mozilla.org/en-US/docs/Web/API/Document/forms
     Array.from(formsCollection).forEach((form) => {
-      new SyfrClass(form);
+      try {
+        new SyfrClass(form);
+      } catch (e) {
+        console.warn(e);
+      }
       return;
     });
   });
 }
+
+autoDetectForms();
