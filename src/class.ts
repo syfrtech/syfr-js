@@ -1,14 +1,42 @@
-import { keyFromJwk, makeCompactJwe } from "./encrypt";
+import { keyFromJwk, makeCompactJwe, JweCid, CompactJwe } from "./encrypt";
 import { SyfrEvent } from "./event";
 import { fetchFromApi, pushToApi } from "./request";
-import {
-  CompactJwe,
-  FileJweMeta,
-  JweCid,
-  JweMap,
-  SyfrFormId,
-  SyfrJweContent,
-} from "./types";
+
+export type SyfrJweContentItem = string | FileJweMeta | undefined;
+
+/**
+ * @param data is a map of form data, but Files must be converted to FileJweMeta
+ * @param code is the serialized HTML representing the form
+ */
+export type SyfrJweContent = {
+  data: {
+    [k: string]: SyfrJweContentItem | SyfrJweContentItem[];
+  };
+  code: String;
+};
+
+/**
+ * Similar to File but drops file streams (no .text(), no .arrayBuffer(), .etc)
+ */
+export type FileJweMeta = {
+  name: File["name"];
+  lastModified: File["lastModified"];
+  type: File["type"];
+  cids: string[];
+};
+
+/**
+ * UUID v4
+ * @see https://datatracker.ietf.org/doc/html/rfc4122
+ */
+export type Uuid = string;
+
+/**
+ * An object containing CompactJWEs indexed according to their `cid`
+ */
+export type JweMap = { [cid: JweCid]: CompactJwe };
+
+type SyfrFormId = Uuid;
 
 /**
  * Automatically initialized when script is included.

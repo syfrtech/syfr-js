@@ -1,4 +1,49 @@
-import { SyfrDebugEvent, SyfrValidEvent, SyfrRequestEvent, SyfrTransmitEvent } from "./types";
+import { JweMap } from "./class";
+/**
+ * Debug `CustomEvent.detail` can be anything, anytime.  Intended to assist
+ * developers.  Code should never depend on its contents or timing.
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+ */
+declare type SyfrDebugEventDetail = any;
+/**
+ * Emitted to help developers debug (no certain timing)
+ */
+declare type SyfrDebugEvent = CustomEvent<SyfrDebugEventDetail>;
+/**
+ * Valid `CustomEvent.detail` indicates users can validate your form encryption with Syfr.
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+ */
+declare type SyfrValidEventDetail = {
+    id: string;
+    validateUrl: string;
+};
+/**
+ * Emitted when Syfr has loaded the form's public `CryptoKey`
+ */
+declare type SyfrValidEvent = CustomEvent<SyfrValidEventDetail>;
+/**
+ * Transmit `CustomEvent.detail` provides an UNSTABLE a way to create your own webhooks.
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+ */
+declare type SyfrTransmitEventDetail = {
+    jwes: JweMap;
+    payload: FormData;
+};
+/**
+ * Emitted immediately before `XMLHttpRequest.send()`
+ */
+declare type SyfrTransmitEvent = CustomEvent<SyfrTransmitEventDetail>;
+/**
+ * Request `CustomEvent.detail` provides the XMLHttpRequest for the form.
+ * Monitor upload, show errors, handle success, and more
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#events
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+ */
+declare type SyfrRequestEventDetail = XMLHttpRequest;
+/**
+ * Emitted when an XMLHttpRequest is created
+ */
+declare type SyfrRequestEvent = CustomEvent<SyfrRequestEventDetail>;
 /**
  * Each static function creates a CustomEvent and immediately dispatches
  * These should be called by SyfrForm according to the timing indicated
@@ -64,3 +109,4 @@ export declare class SyfrEvent {
     static transmit(form: HTMLFormElement, detail: SyfrTransmitEvent["detail"]): void;
     static request(form: HTMLFormElement, detail: SyfrRequestEvent["detail"]): void;
 }
+export {};
