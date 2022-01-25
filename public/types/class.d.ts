@@ -12,11 +12,13 @@ export declare class SyfrClass {
         publicKey: CryptoKey;
     };
     jwes: JweMap;
-    loading: boolean;
+    locked: boolean;
     link?: HTMLAnchorElement;
     constructor(form: SyfrClass["form"], syfrId?: SyfrFormId, link?: HTMLAnchorElement);
-    linkCheck(): boolean;
-    api(): Promise<{
+    checkId(syfrId?: SyfrFormId): string;
+    validate(): Promise<void>;
+    validateLink(): Promise<boolean>;
+    callApi(): Promise<{
         publicJwk: import("./types").SyfrJwk;
         whiteLabel: boolean;
     } & {
@@ -24,11 +26,14 @@ export declare class SyfrClass {
     }>;
     getJwk(): Promise<import("./types").SyfrJwk>;
     getKey(): Promise<CryptoKey>;
+    prepareForm(): void;
     /**
      * Listens for the form submit (the SubmitEvent only fires if it succeeds validation)
      * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event
      */
-    autoSubmit(): void;
+    addSubmitListener(): void;
+    beforeSubmit(): Promise<void>;
+    afterSubmit(): void;
     submit(): Promise<void>;
     buildEntry(): Promise<void>;
     /**

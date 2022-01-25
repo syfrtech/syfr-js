@@ -22,7 +22,7 @@ export class SyfrClass {
     publicKey: CryptoKey; // the CryptoKey from the JWK to encrypt the formdata
   }; // the object response from Syfr Api
   jwes: JweMap = {}; // the JWEs which will be submitted to Syfr
-  loading: boolean = false;
+  locked: boolean = false; // blocks submissions from being submitted when true
   link?: HTMLAnchorElement;
 
   constructor(
@@ -31,27 +31,41 @@ export class SyfrClass {
     link?: HTMLAnchorElement
   ) {
     this.form = form;
-    let id = syfrId ?? form.dataset?.syfrId;
+    this.id = this.checkId(syfrId);
+    this.link =
+      link ?? this.form.querySelector("[data-syfr-validate]") ?? undefined;
+    this.prepareForm();
+  }
+
+  checkId(syfrId?: SyfrFormId) {
+    let id = syfrId ?? this.form.dataset?.syfrId;
     if (!id) {
+      // don't lock when missing id; just ignore it
       throw {
         form: this.form,
         error: `Ignoring: no form id`,
       };
     }
-    this.id = id;
-    this.link =
-      link ?? this.form.querySelector("[data-syfr-validate]") ?? undefined;
-    this.autoSubmit();
+    return id;
   }
 
-  linkCheck() {
+  async validate() {
+    let response = await this.callApi();
+    if (!response.whiteLabel) {
+      this.validateLink(); // validation link required (whiteLabel is exempt)
+    }
+  }
+
+  async validateLink() {
     let linkEl = this.link;
-    if (!linkEl)
+    if (!linkEl) {
+      this.locked = true;
       throw {
         form: this.form,
         error: `The form must have a validation link, ex: <a data-syfr-validate ...`,
         seeDocs: "https://syfr.app/docs/validation",
       };
+    }
     let href = `https://syfr.app/validate/${this.id}`;
     let issues = {
       ...(!(linkEl instanceof HTMLAnchorElement) && {
@@ -98,6 +112,7 @@ export class SyfrClass {
       };
     }
     if (Object.keys(issues).length > 0) {
+      this.locked = true;
       throw {
         form: this.form,
         link: linkEl,
@@ -109,14 +124,11 @@ export class SyfrClass {
     return true;
   }
 
-  async api() {
+  async callApi() {
     if (this.response) return this.response;
     try {
       let response = await fetchFromApi(this.id);
       let publicKey = await keyFromJwk(response.publicJwk);
-      if (!response.whiteLabel) {
-        this.linkCheck();
-      }
       this.response = { ...response, publicKey };
       SyfrEvent.valid(this.form, {
         id: this.id,
@@ -130,6 +142,7 @@ export class SyfrClass {
       });
       return this.response;
     } catch (e) {
+      this.locked = true;
       throw {
         syfrId: this.id,
         error: "Bad data-syfr-id or some other error with API",
@@ -138,42 +151,44 @@ export class SyfrClass {
   }
 
   async getJwk() {
-    return (await this.api()).publicJwk;
+    return (await this.callApi()).publicJwk;
   }
 
   async getKey() {
-    return (await this.api()).publicKey;
+    return (await this.callApi()).publicKey;
+  }
+
+  prepareForm() {
+    this.addSubmitListener();
+    this.validate(); // pre-validate form
   }
 
   /**
    * Listens for the form submit (the SubmitEvent only fires if it succeeds validation)
    * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event
    */
-  autoSubmit() {
-    SyfrEvent.debug(this.form, {
-      message: "Initializing SyfrClass",
-      syfrId: this.id,
-      form: this.form,
-    });
-    this.api(); // preload response
+  addSubmitListener() {
     this.form.addEventListener("submit", async (event: SubmitEvent) => {
       event.preventDefault();
       event.stopImmediatePropagation();
       event.stopPropagation();
-      if (this.loading) {
-        SyfrEvent.debug(this.form, "Ignored duplicate submission.");
-        return;
-      }
-      this.loading = true;
+      await this.beforeSubmit();
       await this.submit();
-      this.form.reset();
-      this.jwes = {};
-      this.loading = false;
+      this.afterSubmit();
     });
+  }
+  async beforeSubmit() {
+    if (this.locked) throw "Ignored submission; the form is locked.";
+    await this.validateLink();
+    this.locked = true;
+  }
+
+  afterSubmit() {
+    this.jwes = {};
+    this.locked = false;
   }
 
   async submit() {
-    await this.api();
     await this.buildEntry();
     await this.sendToSyfr();
   }
@@ -270,9 +285,12 @@ export class SyfrClass {
   }
 
   jweToCid(jwe: CompactJwe): JweCid {
-    let response = jwe.split(".")[4];
-    if (!response) throw "Provided JWE was invalid";
-    return response;
+    let cid = jwe.split(".")[4];
+    if (!cid) {
+      this.locked = true;
+      throw "Provided JWE was invalid";
+    }
+    return cid;
   }
 
   async sendToSyfr() {
