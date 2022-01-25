@@ -11,26 +11,22 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 import React from "react";
 import { SyfrClass } from "./class";
-export const useSyfrForm = (id) => {
-    let [form, setForm] = React.useState();
+export const useSyfrForm = (id, handleForm) => {
     let linkProps = {
         rel: "",
         href: `https://syfr.app/validate/${id}`,
         ["data-syfr-validate"]: true,
     };
     const SyfrForm = (_a) => {
-        var { action } = _a, props = __rest(_a, ["action"]);
-        React.useEffect(() => {
-            if (!!form)
-                new SyfrClass(form, id);
-        }, [form]);
+        var { action, onSubmit } = _a, props = __rest(_a, ["action", "onSubmit"]);
         // iOS needs an "action" attribute for nice input: https://stackoverflow.com/a/39485162/406725
         const _action = action !== null && action !== void 0 ? action : "#";
-        if (typeof window === "undefined")
-            return React.createElement(React.Fragment, null);
-        return (React.createElement("form", Object.assign({ ref: (element) => {
-                setForm(element);
+        return (React.createElement("form", Object.assign({ ref: (form) => {
+                if (!!form) {
+                    new SyfrClass(form, id);
+                    !!handleForm && handleForm(form);
+                }
             }, action: _action }, props)));
     };
-    return [SyfrForm, form, linkProps];
+    return [SyfrForm, linkProps];
 };

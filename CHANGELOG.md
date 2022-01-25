@@ -1,3 +1,10 @@
+### [2.4.1-beta.26](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.25...2.4.1-beta.26) (2022-01-25)
+
+
+### Fixes
+
+* correct infinte loop ([3eb3d2e](https://github.com/syfrtech/entry-js/commit/3eb3d2ebe14562af71db528dd35b19f642812ada))
+
 ### [2.4.1-beta.25](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.24...2.4.1-beta.25) (2022-01-23)
 
 
