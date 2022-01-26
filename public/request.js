@@ -1,3 +1,4 @@
+import { SyfrEvent } from "./event";
 /**
  * @see https://github.com/syfrapp/api/issues/101
  */
@@ -11,7 +12,7 @@ export async function fetchFromApi(id) {
  */
 export async function pushToApi(payload, form) {
     let request = new XMLHttpRequest();
-    form.dispatchEvent(new CustomEvent("request", { detail: request }));
+    SyfrEvent.send(form, request);
     request.open("POST", "https://develop-api.syfr.app/rest/pub/entry");
     request.send(payload);
 }

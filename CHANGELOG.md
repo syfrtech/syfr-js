@@ -1,3 +1,17 @@
+### [2.4.1-beta.27](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.26...2.4.1-beta.27) (2022-01-26)
+
+
+### Features
+
+* debug mode ([90ea354](https://github.com/syfrtech/entry-js/commit/90ea354648c2b03cea738ade1d7080476ab48cfb))
+
+
+### Fixes
+
+* disribute types to their respective files ([eb3746f](https://github.com/syfrtech/entry-js/commit/eb3746f3bfbe61f14bb14b8887bd045c7eb9eb1c))
+* organize flow, checks, and lock ([0cfc50f](https://github.com/syfrtech/entry-js/commit/0cfc50f1503fa983a143ab99bbda59b482c5bda4))
+* simplify react component ([e986c89](https://github.com/syfrtech/entry-js/commit/e986c89ad1e8790518b16ebf70f15bcc8ecaa6f3))
+
 ### [2.4.1-beta.26](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.25...2.4.1-beta.26) (2022-01-25)
 
 
