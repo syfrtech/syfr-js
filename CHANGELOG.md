@@ -1,3 +1,10 @@
+### [2.4.1-beta.28](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.27...2.4.1-beta.28) (2022-01-26)
+
+
+### Features
+
+* add event monitoring ([5f24512](https://github.com/syfrtech/entry-js/commit/5f24512bef7fcc5b12bdfae10c0012ddb283b667))
+
 ### [2.4.1-beta.27](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.26...2.4.1-beta.27) (2022-01-26)
 
 

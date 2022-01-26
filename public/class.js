@@ -10,7 +10,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import { keyFromJwk, makeCompactJwe } from "./encrypt";
-import { SyfrEvent } from "./event";
+import { SyfrEvent, SyfrEventMap } from "./event";
 import { fetchFromApi, pushToApi } from "./request";
 /**
  * Automatically initialized when script is included.
@@ -41,8 +41,9 @@ export class SyfrClass {
         }
         return id;
     }
-    setOptions({ debug, link }) {
+    setOptions({ debug, link, listeners }) {
         var _a, _b, _c, _d, _e;
+        this.listeners = listeners;
         this.debug = debug !== null && debug !== void 0 ? debug : {
             standard: (_b = ((_a = this.form.dataset) === null || _a === void 0 ? void 0 : _a.syfrDebug) != undefined) !== null && _b !== void 0 ? _b : false,
             xhr: (_d = ((_c = this.form.dataset) === null || _c === void 0 ? void 0 : _c.syfrDebugXhr) != undefined) !== null && _d !== void 0 ? _d : false,
@@ -135,26 +136,47 @@ export class SyfrClass {
     }
     async prepareForm() {
         this.addSubmitListener();
-        this.debug.standard && this.addDebugListeners();
+        this.addExternalListeners();
         await this.validate(); // pre-validate form
     }
-    addDebugListeners() {
-        ["syfr_valid", "syfr_send", "syfr_beforeSend"].forEach((eventType) => {
-            this.form.addEventListener(eventType, (e) => {
-                console.log(e);
-                if (eventType === "syfr_beforeSend" && this.debug.xhr) {
-                    this.addXhrListener(e);
+    addExternalListeners() {
+        if (this.debug.standard || this.listeners) {
+            this.form.addEventListener(SyfrEventMap.valid, (e) => {
+                var _a;
+                this.debug.standard && console.log(e);
+                ((_a = this.listeners) === null || _a === void 0 ? void 0 : _a.valid) &&
+                    this.listeners.valid(e);
+            });
+            this.form.addEventListener(SyfrEventMap.encrypted, (e) => {
+                var _a;
+                this.debug.standard && console.log(e);
+                ((_a = this.listeners) === null || _a === void 0 ? void 0 : _a.encrypted) &&
+                    this.listeners.encrypted(e);
+            });
+            this.form.addEventListener(SyfrEventMap.beforeSend, (e) => {
+                var _a;
+                this.debug.standard && console.log(e);
+                ((_a = this.listeners) === null || _a === void 0 ? void 0 : _a.beforeSend) &&
+                    this.listeners.beforeSend(e);
+                let event = e;
+                if (this.debug.xhr) {
+                    for (var key in event.detail) {
+                        if (key.search("on") === 0) {
+                            event.detail.addEventListener(key.slice(2), (e) => {
+                                var _a;
+                                console.log(e);
+                                ((_a = this.listeners) === null || _a === void 0 ? void 0 : _a.xhr) && this.listeners.xhr(e);
+                            });
+                        }
+                    }
                 }
             });
-        });
-    }
-    addXhrListener(event) {
-        for (var key in event.detail) {
-            if (key.search("on") === 0) {
-                event.detail.addEventListener(key.slice(2), (e) => {
-                    console.log(e);
-                });
-            }
+            this.form.addEventListener(SyfrEventMap.afterSend, (e) => {
+                var _a;
+                this.debug.standard && console.log(e);
+                ((_a = this.listeners) === null || _a === void 0 ? void 0 : _a.afterSend) &&
+                    this.listeners.afterSend(e);
+            });
         }
     }
     /**
@@ -189,6 +211,7 @@ export class SyfrClass {
         let code = this.getCode();
         let data = await this.getData();
         await this.buildRootJwe({ code, data });
+        SyfrEvent.encrypted(this.form, this.jwes);
     }
     /**
      * Serialize the form HTML to a string
@@ -269,7 +292,6 @@ export class SyfrClass {
         Object.values(this.jwes).forEach((jwe) => {
             payload.append("compactJwe", jwe);
         });
-        SyfrEvent.beforeSend(this.form, { jwes: this.jwes, payload });
         await pushToApi(payload, this.form);
     }
 }
