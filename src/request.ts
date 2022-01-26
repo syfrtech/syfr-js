@@ -36,7 +36,8 @@ export async function fetchFromApi(id: string) {
  */
 export async function pushToApi(payload: FormData, form: HTMLFormElement) {
   let request = new XMLHttpRequest();
-  SyfrEvent.send(form, request);
+  SyfrEvent.beforeSend(form, request);
   request.open("POST", "https://develop-api.syfr.app/rest/pub/entry");
   request.send(payload);
+  SyfrEvent.afterSend(form, request);
 }

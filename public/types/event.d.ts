@@ -1,51 +1,55 @@
 import { SyfrClass } from ".";
 import { JweMap } from "./class";
 /**
+ * Emitted when Syfr has loaded the form's public `CryptoKey`
  * Valid `CustomEvent.detail` indicates users can validate your form encryption with Syfr.
  * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
  */
-declare type SyfrValidEventDetail = SyfrClass["response"];
+export declare type SyfrValidEvent = CustomEvent<SyfrClass["response"]>;
 /**
- * Emitted when Syfr has loaded the form's public `CryptoKey`
- */
-export declare type SyfrValidEvent = CustomEvent<SyfrValidEventDetail>;
-/**
+ * Emitted when the form data has been encrypted
  * Transmit `CustomEvent.detail` provides an UNSTABLE a way to create your own webhooks.
  * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
  */
-declare type SyfrBeforeSendEventDetail = {
-    jwes: JweMap;
-    payload: FormData;
-};
+export declare type SyfrEncryptedEvent = CustomEvent<JweMap>;
 /**
- * Emitted immediately before `XMLHttpRequest.send()`
- */
-export declare type SyfrBeforeSendEvent = CustomEvent<SyfrBeforeSendEventDetail>;
-/**
+ * Emitted when an XMLHttpRequest is created
  * Receive `CustomEvent.detail` provides the XMLHttpRequest for the form.
  * Monitor upload, show errors, handle success, and more
  * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#events
  * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
  */
-declare type SyfrSendEventDetail = XMLHttpRequest;
+export declare type SyfrBeforeSendEvent = CustomEvent<XMLHttpRequest>;
 /**
- * Emitted when an XMLHttpRequest is created
+ * Emitted after an XMLHttpRequest was sent to Syfr
  */
-export declare type SyfrSendEvent = CustomEvent<SyfrSendEventDetail>;
+export declare type SyfrAfterSendEvent = CustomEvent<XMLHttpRequest>;
+export declare type SyfrEventTypes = {
+    valid: SyfrValidEvent;
+    encrypted: SyfrEncryptedEvent;
+    beforeSend: SyfrBeforeSendEvent;
+    afterSend: SyfrAfterSendEvent;
+};
+export declare const SyfrEventMap: {
+    valid: "syfr_valid";
+    encrypted: "syfr_encrypted";
+    beforeSend: "syfr_beforeSend";
+    afterSend: "syfr_afterSend";
+};
 /**
  * Each static function creates a CustomEvent and immediately dispatched
  * @see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
  * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#events
  * for examples, @see SyfrClass
  */
-export declare class SyfrEvent {
-    static valid: (form: HTMLFormElement, detail: ({
+export declare const SyfrEvent: {
+    valid: (form: HTMLFormElement, detail: ({
         publicJwk: import("./request").SyfrJwk;
         whiteLabel: boolean;
     } & {
         publicKey: CryptoKey;
     }) | undefined) => void;
-    static beforeSend: (form: HTMLFormElement, detail: SyfrBeforeSendEventDetail) => void;
-    static send: (form: HTMLFormElement, detail: XMLHttpRequest) => void;
-}
-export {};
+    encrypted: (form: HTMLFormElement, detail: JweMap) => void;
+    beforeSend: (form: HTMLFormElement, detail: XMLHttpRequest) => void;
+    afterSend: (form: HTMLFormElement, detail: XMLHttpRequest) => void;
+};

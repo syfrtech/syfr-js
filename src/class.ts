@@ -1,5 +1,5 @@
 import { keyFromJwk, makeCompactJwe, JweCid, CompactJwe } from "./encrypt";
-import { SyfrEvent, SyfrSendEvent } from "./event";
+import { SyfrEvent, SyfrEventMap, SyfrEventTypes } from "./event";
 import { fetchFromApi, pushToApi } from "./request";
 
 export type SyfrJweContentItem = string | FileJweMeta | undefined;
@@ -42,6 +42,7 @@ export type SyfrClassOptions = {
   id?: SyfrFormId;
   link?: HTMLAnchorElement;
   debug?: SyfrClass["debug"];
+  listeners?: SyfrClass["listeners"];
 };
 
 /**
@@ -60,6 +61,9 @@ export class SyfrClass {
   locked: boolean = false; // blocks submissions from being submitted when true
   link?: HTMLAnchorElement;
   debug = { standard: false, xhr: false };
+  listeners?: { xhr: (e: Event) => void } & {
+    [key in keyof SyfrEventTypes]: (e: SyfrEventTypes[key]) => void;
+  };
 
   constructor(form: SyfrClass["form"], { id, ...opts }: SyfrClassOptions = {}) {
     this.form = form;
@@ -80,7 +84,8 @@ export class SyfrClass {
     return id;
   }
 
-  setOptions({ debug, link }: SyfrClassOptions) {
+  setOptions({ debug, link, listeners }: SyfrClassOptions) {
+    this.listeners = listeners;
     this.debug = debug ?? {
       standard: this.form.dataset?.syfrDebug != undefined ?? false,
       xhr: this.form.dataset?.syfrDebugXhr != undefined ?? false,
@@ -191,28 +196,43 @@ export class SyfrClass {
 
   async prepareForm() {
     this.addSubmitListener();
-    this.debug.standard && this.addDebugListeners();
+    this.addExternalListeners();
     await this.validate(); // pre-validate form
   }
 
-  addDebugListeners() {
-    ["syfr_valid", "syfr_send", "syfr_beforeSend"].forEach((eventType) => {
-      this.form.addEventListener(eventType, (e: Event) => {
-        console.log(e);
-        if (eventType === "syfr_beforeSend" && this.debug.xhr) {
-          this.addXhrListener(e as SyfrSendEvent);
+  addExternalListeners() {
+    if (this.debug.standard || this.listeners) {
+      this.form.addEventListener(SyfrEventMap.valid, (e) => {
+        this.debug.standard && console.log(e);
+        this.listeners?.valid &&
+          this.listeners.valid(e as SyfrEventTypes["valid"]);
+      });
+      this.form.addEventListener(SyfrEventMap.encrypted, (e) => {
+        this.debug.standard && console.log(e);
+        this.listeners?.encrypted &&
+          this.listeners.encrypted(e as SyfrEventTypes["encrypted"]);
+      });
+      this.form.addEventListener(SyfrEventMap.beforeSend, (e) => {
+        this.debug.standard && console.log(e);
+        this.listeners?.beforeSend &&
+          this.listeners.beforeSend(e as SyfrEventTypes["beforeSend"]);
+        let event = e as SyfrEventTypes["beforeSend"];
+        if (this.debug.xhr) {
+          for (var key in event.detail) {
+            if (key.search("on") === 0) {
+              event.detail.addEventListener(key.slice(2), (e: Event) => {
+                console.log(e);
+                this.listeners?.xhr && this.listeners.xhr(e);
+              });
+            }
+          }
         }
       });
-    });
-  }
-
-  addXhrListener(event: SyfrSendEvent) {
-    for (var key in event.detail) {
-      if (key.search("on") === 0) {
-        event.detail.addEventListener(key.slice(2), (e: Event) => {
-          console.log(e);
-        });
-      }
+      this.form.addEventListener(SyfrEventMap.afterSend, (e) => {
+        this.debug.standard && console.log(e);
+        this.listeners?.afterSend &&
+          this.listeners.afterSend(e as SyfrEventTypes["afterSend"]);
+      });
     }
   }
 
@@ -250,6 +270,7 @@ export class SyfrClass {
     let code = this.getCode();
     let data = await this.getData();
     await this.buildRootJwe({ code, data });
+    SyfrEvent.encrypted(this.form, this.jwes);
   }
 
   /**
@@ -351,7 +372,6 @@ export class SyfrClass {
     Object.values(this.jwes).forEach((jwe) => {
       payload.append("compactJwe", jwe);
     });
-    SyfrEvent.beforeSend(this.form, { jwes: this.jwes, payload });
     await pushToApi(payload, this.form);
   }
 }

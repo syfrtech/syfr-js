@@ -1,5 +1,5 @@
 import { JweCid, CompactJwe } from "./encrypt";
-import { SyfrSendEvent } from "./event";
+import { SyfrEventTypes } from "./event";
 import { fetchFromApi } from "./request";
 export declare type SyfrJweContentItem = string | FileJweMeta | undefined;
 /**
@@ -37,6 +37,7 @@ export declare type SyfrClassOptions = {
     id?: SyfrFormId;
     link?: HTMLAnchorElement;
     debug?: SyfrClass["debug"];
+    listeners?: SyfrClass["listeners"];
 };
 /**
  * Automatically initialized when script is included.
@@ -57,9 +58,14 @@ export declare class SyfrClass {
         standard: boolean;
         xhr: boolean;
     };
+    listeners?: {
+        xhr: (e: Event) => void;
+    } & {
+        [key in keyof SyfrEventTypes]: (e: SyfrEventTypes[key]) => void;
+    };
     constructor(form: SyfrClass["form"], { id, ...opts }?: SyfrClassOptions);
     getId(syfrId?: SyfrFormId): string;
-    setOptions({ debug, link }: SyfrClassOptions): void;
+    setOptions({ debug, link, listeners }: SyfrClassOptions): void;
     validate(): Promise<void>;
     validateLink(): Promise<boolean>;
     askApi(): Promise<{
@@ -71,8 +77,7 @@ export declare class SyfrClass {
     getJwk(): Promise<import("./request").SyfrJwk>;
     getKey(): Promise<CryptoKey>;
     prepareForm(): Promise<void>;
-    addDebugListeners(): void;
-    addXhrListener(event: SyfrSendEvent): void;
+    addExternalListeners(): void;
     /**
      * Listens for the form submit (the SubmitEvent only fires if it succeeds validation)
      * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event
