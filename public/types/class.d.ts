@@ -59,9 +59,9 @@ export declare class SyfrClass {
         xhr: boolean;
     };
     listeners?: {
-        xhr: (e: Event) => void;
+        xhr?: (e: Event) => void;
     } & {
-        [key in keyof SyfrEventTypes]: (e: SyfrEventTypes[key]) => void;
+        [key in keyof SyfrEventTypes]?: (e: SyfrEventTypes[key]) => void;
     };
     constructor(form: SyfrClass["form"], { id, ...opts }?: SyfrClassOptions);
     getId(syfrId?: SyfrFormId): string;

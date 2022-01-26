@@ -61,8 +61,8 @@ export class SyfrClass {
   locked: boolean = false; // blocks submissions from being submitted when true
   link?: HTMLAnchorElement;
   debug = { standard: false, xhr: false };
-  listeners?: { xhr: (e: Event) => void } & {
-    [key in keyof SyfrEventTypes]: (e: SyfrEventTypes[key]) => void;
+  listeners?: { xhr?: (e: Event) => void } & {
+    [key in keyof SyfrEventTypes]?: (e: SyfrEventTypes[key]) => void;
   };
 
   constructor(form: SyfrClass["form"], { id, ...opts }: SyfrClassOptions = {}) {
