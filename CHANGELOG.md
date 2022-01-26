@@ -1,3 +1,10 @@
+### [2.4.1-beta.29](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.28...2.4.1-beta.29) (2022-01-26)
+
+
+### Fixes
+
+* allow individual listeners ([8a9c614](https://github.com/syfrtech/entry-js/commit/8a9c6148c2ab973bf3b92874e4fe3dcd0195a33d))
+
 ### [2.4.1-beta.28](https://github.com/syfrtech/entry-js/compare/2.4.1-beta.27...2.4.1-beta.28) (2022-01-26)
 
 
