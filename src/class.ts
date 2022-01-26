@@ -38,7 +38,7 @@ export type JweMap = { [cid: JweCid]: CompactJwe };
 
 type SyfrFormId = Uuid; // the UUID of the form in Syfr
 
-type SyfrClassOptions = {
+export type SyfrClassOptions = {
   id?: SyfrFormId;
   link?: HTMLAnchorElement;
   debug?: SyfrClass["debug"];

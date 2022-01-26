@@ -33,7 +33,7 @@ export declare type JweMap = {
     [cid: JweCid]: CompactJwe;
 };
 declare type SyfrFormId = Uuid;
-declare type SyfrClassOptions = {
+export declare type SyfrClassOptions = {
     id?: SyfrFormId;
     link?: HTMLAnchorElement;
     debug?: SyfrClass["debug"];

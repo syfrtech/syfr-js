@@ -1,34 +1,36 @@
 import React from "react";
-import { SyfrClass } from "./class";
+import { SyfrClass, SyfrClassOptions } from "./class";
 
-type ReactFormProps = React.DetailedHTMLProps<
-  React.FormHTMLAttributes<HTMLFormElement>,
-  HTMLFormElement
+type ReactFormProps = Omit<
+  React.DetailedHTMLProps<
+    React.FormHTMLAttributes<HTMLFormElement>,
+    HTMLFormElement
+  >,
+  "action" | "onSubmit"
 >;
 
-export const useSyfrForm = (
-  id: NonNullable<ConstructorParameters<typeof SyfrClass>[1]>,
-  handleForm?: (form: HTMLFormElement) => void
-) => {
+type useSyfrFormOptions = SyfrClassOptions &
+  Required<Pick<SyfrClassOptions, "id">>;
+
+export const useSyfrForm = (options: useSyfrFormOptions) => {
   let linkProps = {
     rel: "",
-    href: `https://syfr.app/validate/${id}`,
+    href: `https://syfr.app/validate/${options.id}`,
     ["data-syfr-validate"]: true,
   };
 
-  const SyfrForm = ({ action, onSubmit, ...props }: ReactFormProps) => {
+  const SyfrForm = (props: ReactFormProps) => {
     // iOS needs an "action" attribute for nice input: https://stackoverflow.com/a/39485162/406725
-    const _action = action ?? "#";
+    const action = "#";
     return (
       <form
         ref={(form) => {
           if (!!form) {
-            new SyfrClass(form, id);
-            !!handleForm && handleForm(form);
+            new SyfrClass(form, options);
           }
         }}
-        action={_action}
         {...props}
+        action={action}
       />
     );
   };
