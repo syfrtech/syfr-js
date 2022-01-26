@@ -4,6 +4,7 @@
  * @see https://github.com/microsoft/TypeScript/issues/26854
  */
 import { JWK } from "jose";
+import { SyfrEvent } from "./event";
 
 /**
  * JWK / JsonWebKey extended with Syfr requirements
@@ -35,7 +36,7 @@ export async function fetchFromApi(id: string) {
  */
 export async function pushToApi(payload: FormData, form: HTMLFormElement) {
   let request = new XMLHttpRequest();
-  form.dispatchEvent(new CustomEvent("request", { detail: request }));
+  SyfrEvent.send(form, request);
   request.open("POST", "https://develop-api.syfr.app/rest/pub/entry");
   request.send(payload);
 }

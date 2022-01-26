@@ -7,43 +7,19 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <title>Example Form</title>
-    <script>
-      window.addEventListener("DOMContentLoaded", (event) => {
-        Array.from(document.forms).forEach((form) => {
-          form.addEventListener("debug", (event) => {
-            console.log("debug", event.detail);
-          });
-
-          form.addEventListener("request", (event) => {
-            for (var key in event.detail) {
-              if (key.search("on") === 0) {
-                event.detail.addEventListener(key.slice(2), (event) => {
-                  console.log("XHR Event", event);
-                });
-              }
-            }
-          });
-
-          form.addEventListener("valid", (event) => {
-            console.log(event);
-          });
-
-          form.addEventListener("transmit", (event) => {
-            console.log("transmitEvent", event.detail);
-          });
-        });
-      });
-    </script>
     <script defer src="form-cipher.js"></script>
   </head>
 
   <body>
     <div id="root"></div>
+    <!-- remove data-syfr-debug to turn off console messages -->
     <form
       id="myForm"
       enctype="multipart/form-data"
       method="post"
       data-syfr-id="<%= htmlWebpackPlugin.options.syfrWhiteLabelFormId %>"
+      data-syfr-debug
+      data-syfr-debug-xhr
     >
       <h1>Demo Form</h1>
       <fieldset>

@@ -1,4 +1,5 @@
 import { JweCid, CompactJwe } from "./encrypt";
+import { SyfrSendEvent } from "./event";
 import { fetchFromApi } from "./request";
 export declare type SyfrJweContentItem = string | FileJweMeta | undefined;
 /**
@@ -32,10 +33,16 @@ export declare type JweMap = {
     [cid: JweCid]: CompactJwe;
 };
 declare type SyfrFormId = Uuid;
+declare type SyfrClassOptions = {
+    id?: SyfrFormId;
+    link?: HTMLAnchorElement;
+    debug?: SyfrClass["debug"];
+};
 /**
  * Automatically initialized when script is included.
  * Use event listeners to enhance user experience
  * @see SyfrEvent
+ * @see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Constraint_validation
  */
 export declare class SyfrClass {
     id: SyfrFormId;
@@ -46,19 +53,26 @@ export declare class SyfrClass {
     jwes: JweMap;
     locked: boolean;
     link?: HTMLAnchorElement;
-    constructor(form: SyfrClass["form"], syfrId?: SyfrFormId, link?: HTMLAnchorElement);
-    checkId(syfrId?: SyfrFormId): string;
+    debug: {
+        standard: boolean;
+        xhr: boolean;
+    };
+    constructor(form: SyfrClass["form"], { id, ...opts }?: SyfrClassOptions);
+    getId(syfrId?: SyfrFormId): string;
+    setOptions({ debug, link }: SyfrClassOptions): void;
     validate(): Promise<void>;
     validateLink(): Promise<boolean>;
-    callApi(): Promise<{
-        publicJwk: import("./types").SyfrJwk;
+    askApi(): Promise<{
+        publicJwk: import("./request").SyfrJwk;
         whiteLabel: boolean;
     } & {
         publicKey: CryptoKey;
     }>;
-    getJwk(): Promise<import("./types").SyfrJwk>;
+    getJwk(): Promise<import("./request").SyfrJwk>;
     getKey(): Promise<CryptoKey>;
-    prepareForm(): void;
+    prepareForm(): Promise<void>;
+    addDebugListeners(): void;
+    addXhrListener(event: SyfrSendEvent): void;
     /**
      * Listens for the form submit (the SubmitEvent only fires if it succeeds validation)
      * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event
@@ -74,7 +88,7 @@ export declare class SyfrClass {
      */
     getCode(): string;
     getData(): Promise<{
-        [k: string]: import("./types").SyfrJweContentItem | import("./types").SyfrJweContentItem[];
+        [k: string]: SyfrJweContentItem | SyfrJweContentItem[];
     }>;
     buildRootJwe(stringifiableObj: object): Promise<void>;
     getParsedFieldArr(fieldArr: FormDataEntryValue[]): Promise<(string | FileJweMeta | undefined)[]>;
@@ -88,3 +102,4 @@ export declare class SyfrClass {
     jweToCid(jwe: CompactJwe): JweCid;
     sendToSyfr(): Promise<void>;
 }
+export {};

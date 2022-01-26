@@ -11,31 +11,10 @@
       window.addEventListener("DOMContentLoaded", (event) => {
         let myForm = document.getElementById("myForm");
         let myFormValidateLink = document.getElementById("myFormValidateLink");
-        new Syfr.SyfrClass(
-          myForm,
-          "<%= htmlWebpackPlugin.options.syfrFormId %>",
-          myFormValidateLink
-        );
-        myForm.addEventListener("debug", (event) => {
-          console.log("debug", event.detail);
-        });
-
-        myForm.addEventListener("request", (event) => {
-          for (var key in event.detail) {
-            if (key.search("on") === 0) {
-              event.detail.addEventListener(key.slice(2), (event) => {
-                console.log("XHR Event", event);
-              });
-            }
-          }
-        });
-
-        myForm.addEventListener("valid", (event) => {
-          console.log(event);
-        });
-
-        myForm.addEventListener("transmit", (event) => {
-          console.log("transmitEvent", event.detail);
+        new Syfr.SyfrClass(myForm, {
+          id: "<%= htmlWebpackPlugin.options.syfrFormId %>",
+          link: myFormValidateLink,
+          debug: { standard: true, xhr: true },
         });
       });
     </script>

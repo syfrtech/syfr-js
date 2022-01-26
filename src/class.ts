@@ -1,5 +1,5 @@
 import { keyFromJwk, makeCompactJwe, JweCid, CompactJwe } from "./encrypt";
-import { SyfrEvent } from "./event";
+import { SyfrEvent, SyfrSendEvent } from "./event";
 import { fetchFromApi, pushToApi } from "./request";
 
 export type SyfrJweContentItem = string | FileJweMeta | undefined;
@@ -36,15 +36,22 @@ export type Uuid = string;
  */
 export type JweMap = { [cid: JweCid]: CompactJwe };
 
-type SyfrFormId = Uuid;
+type SyfrFormId = Uuid; // the UUID of the form in Syfr
+
+type SyfrClassOptions = {
+  id?: SyfrFormId;
+  link?: HTMLAnchorElement;
+  debug?: SyfrClass["debug"];
+};
 
 /**
  * Automatically initialized when script is included.
  * Use event listeners to enhance user experience
  * @see SyfrEvent
+ * @see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Constraint_validation
  */
 export class SyfrClass {
-  id: SyfrFormId; // the UUID of the form in Syfr
+  id: SyfrFormId;
   form: HTMLFormElement; // the DOM representation of the form
   response?: Awaited<ReturnType<typeof fetchFromApi>> & {
     publicKey: CryptoKey; // the CryptoKey from the JWK to encrypt the formdata
@@ -52,20 +59,16 @@ export class SyfrClass {
   jwes: JweMap = {}; // the JWEs which will be submitted to Syfr
   locked: boolean = false; // blocks submissions from being submitted when true
   link?: HTMLAnchorElement;
+  debug = { standard: false, xhr: false };
 
-  constructor(
-    form: SyfrClass["form"],
-    syfrId?: SyfrFormId,
-    link?: HTMLAnchorElement
-  ) {
+  constructor(form: SyfrClass["form"], { id, ...opts }: SyfrClassOptions = {}) {
     this.form = form;
-    this.id = this.checkId(syfrId);
-    this.link =
-      link ?? this.form.querySelector("[data-syfr-validate]") ?? undefined;
+    this.id = this.getId(id);
+    this.setOptions(opts);
     this.prepareForm();
   }
 
-  checkId(syfrId?: SyfrFormId) {
+  getId(syfrId?: SyfrFormId) {
     let id = syfrId ?? this.form.dataset?.syfrId;
     if (!id) {
       // don't lock when missing id; just ignore it
@@ -77,11 +80,21 @@ export class SyfrClass {
     return id;
   }
 
+  setOptions({ debug, link }: SyfrClassOptions) {
+    this.debug = debug ?? {
+      standard: this.form.dataset?.syfrDebug != undefined ?? false,
+      xhr: this.form.dataset?.syfrDebugXhr != undefined ?? false,
+    };
+    this.link =
+      link ?? this.form.querySelector("[data-syfr-validate]") ?? undefined;
+  }
+
   async validate() {
-    let response = await this.callApi();
+    let response = await this.askApi();
     if (!response.whiteLabel) {
-      this.validateLink(); // validation link required (whiteLabel is exempt)
+      this.validateLink(); // validation link required unless whiteLabel
     }
+    SyfrEvent.valid(this.form, response);
   }
 
   async validateLink() {
@@ -152,22 +165,12 @@ export class SyfrClass {
     return true;
   }
 
-  async callApi() {
+  async askApi() {
     if (this.response) return this.response;
     try {
       let response = await fetchFromApi(this.id);
       let publicKey = await keyFromJwk(response.publicJwk);
       this.response = { ...response, publicKey };
-      SyfrEvent.valid(this.form, {
-        id: this.id,
-        validateUrl: `https://syfr.app/validate/${this.id}`,
-      });
-      SyfrEvent.debug(this.form, {
-        id: this.id,
-        formPubKey: this.response.publicKey,
-        message:
-          "use addEventListener('protected',(event)=>{...} to notify your users of the protection",
-      });
       return this.response;
     } catch (e) {
       this.locked = true;
@@ -179,16 +182,38 @@ export class SyfrClass {
   }
 
   async getJwk() {
-    return (await this.callApi()).publicJwk;
+    return (await this.askApi()).publicJwk;
   }
 
   async getKey() {
-    return (await this.callApi()).publicKey;
+    return (await this.askApi()).publicKey;
   }
 
-  prepareForm() {
+  async prepareForm() {
     this.addSubmitListener();
-    this.validate(); // pre-validate form
+    this.debug.standard && this.addDebugListeners();
+    await this.validate(); // pre-validate form
+  }
+
+  addDebugListeners() {
+    ["syfr_valid", "syfr_send", "syfr_beforeSend"].forEach((eventType) => {
+      this.form.addEventListener(eventType, (e: Event) => {
+        console.log(e);
+        if (eventType === "syfr_beforeSend" && this.debug.xhr) {
+          this.addXhrListener(e as SyfrSendEvent);
+        }
+      });
+    });
+  }
+
+  addXhrListener(event: SyfrSendEvent) {
+    for (var key in event.detail) {
+      if (key.search("on") === 0) {
+        event.detail.addEventListener(key.slice(2), (e: Event) => {
+          console.log(e);
+        });
+      }
+    }
   }
 
   /**
@@ -207,7 +232,7 @@ export class SyfrClass {
   }
   async beforeSubmit() {
     if (this.locked) throw "Ignored submission; the form is locked.";
-    await this.validateLink();
+    await this.validate();
     this.locked = true;
   }
 
@@ -326,12 +351,7 @@ export class SyfrClass {
     Object.values(this.jwes).forEach((jwe) => {
       payload.append("compactJwe", jwe);
     });
-    SyfrEvent.transmit(this.form, { jwes: this.jwes, payload });
-    SyfrEvent.debug(this.form, {
-      message: "Sending to Syfr:",
-      jwes: this.jwes,
-      payload,
-    });
+    SyfrEvent.beforeSend(this.form, { jwes: this.jwes, payload });
     await pushToApi(payload, this.form);
   }
 }
